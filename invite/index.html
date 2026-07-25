@@ -1,0 +1,1778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>KUBRIQUE — First Light Launch Reception</title>
+<meta name="description" content="An interactive invitation to First Light, the KUBRIQUE launch reception."/>
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img,svg,canvas{max-width:100%}</style>
+</head>
+<body>
+<style>
+/* ============================================================
+   KUBRIQUE — First Light. Invitation.
+   Night-range palette: sodium amber on deep indigo.
+   Flame cyan is reserved for the plume and the live dot only.
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+
+  --ground:    #070A11;
+  --ground-2:  #0B111C;
+  --card:      #10151F;
+  --card-2:    #161C28;
+  --ink:       #E9E7E1;
+  --ink-soft:  #98A1B0;
+  --ink-faint: #666F7E;
+  --rule:      rgba(233, 231, 225, 0.14);
+  --rule-firm: rgba(233, 231, 225, 0.28);
+  --amber:     #E8A33D;
+  --amber-dim: rgba(232, 163, 61, 0.16);
+  --flame:     #93D4E6;
+  --wax:       #B4762A;
+  --shadow:    0 40px 90px -30px rgba(0, 0, 0, 0.85);
+  --on-amber:  #17110A;
+  --stock:     #1B2331;
+  --stock-2:   #232C3C;
+  --pocket:    #0D121B;
+  --floodlight: rgba(232, 163, 61, 0.14);
+
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", "Hoefler Text", Georgia, serif;
+  --mono:  ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  --measure: 62ch;
+  --pad: clamp(1.4rem, 5vw, 3.25rem);
+}
+
+/* The same card, printed on paper, seen at dawn. */
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --ground:    #AFA99D;
+    --ground-2:  #C4BFB3;
+    --card:      #EFECE4;
+    --card-2:    #E5E1D7;
+    --ink:       #1A2230;
+    --ink-soft:  #59616F;
+    --ink-faint: #7C8492;
+    --rule:      rgba(26, 34, 48, 0.16);
+    --rule-firm: rgba(26, 34, 48, 0.34);
+    --amber:     #9A5E12;
+    --amber-dim: rgba(154, 94, 18, 0.12);
+    --flame:     #2A6274;
+    --wax:       #8E5518;
+    --shadow:    0 34px 70px -28px rgba(38, 32, 20, 0.5);
+  --on-amber:  #FBF7EF;
+  --stock:     #F6F3EB;
+  --stock-2:   #FBF9F3;
+  --pocket:    #DAD5C8;
+  --floodlight: rgba(154, 94, 18, 0.10);
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ground:    #AFA99D;
+  --ground-2:  #C4BFB3;
+  --card:      #EFECE4;
+  --card-2:    #E5E1D7;
+  --ink:       #1A2230;
+  --ink-soft:  #59616F;
+  --ink-faint: #7C8492;
+  --rule:      rgba(26, 34, 48, 0.16);
+  --rule-firm: rgba(26, 34, 48, 0.34);
+  --amber:     #9A5E12;
+  --amber-dim: rgba(154, 94, 18, 0.12);
+  --flame:     #2A6274;
+  --wax:       #8E5518;
+  --shadow:    0 34px 70px -28px rgba(38, 32, 20, 0.5);
+  --on-amber:  #FBF7EF;
+  --stock:     #F6F3EB;
+  --stock-2:   #FBF9F3;
+  --pocket:    #DAD5C8;
+  --floodlight: rgba(154, 94, 18, 0.10);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground:    #070A11;
+  --ground-2:  #0B111C;
+  --card:      #10151F;
+  --card-2:    #161C28;
+  --ink:       #E9E7E1;
+  --ink-soft:  #98A1B0;
+  --ink-faint: #666F7E;
+  --rule:      rgba(233, 231, 225, 0.14);
+  --rule-firm: rgba(233, 231, 225, 0.28);
+  --amber:     #E8A33D;
+  --amber-dim: rgba(232, 163, 61, 0.16);
+  --flame:     #93D4E6;
+  --wax:       #B4762A;
+  --shadow:    0 40px 90px -30px rgba(0, 0, 0, 0.85);
+  --on-amber:  #17110A;
+  --stock:     #1B2331;
+  --stock-2:   #232C3C;
+  --pocket:    #0D121B;
+  --floodlight: rgba(232, 163, 61, 0.14);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(120% 80% at 50% -10%, var(--ground-2) 0%, var(--ground) 62%),
+    var(--ground);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------- shared type utilities ---------- */
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0;
+}
+
+.eyebrow .tick { color: var(--amber); }
+
+.num { font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   1. THE ENVELOPE
+   ============================================================ */
+
+.scene {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  gap: 0;
+  padding: 1.5rem;
+  z-index: 50;
+  background:
+    radial-gradient(70% 40% at 50% 118%, var(--floodlight) 0%, transparent 70%),
+    radial-gradient(90% 70% at 50% 40%, var(--ground-2) 0%, var(--ground) 70%),
+    var(--ground);
+  transition: opacity 700ms ease, visibility 700ms;
+}
+
+body.revealed .scene {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.scene-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.25rem;
+  perspective: 1600px;
+}
+
+.envelope {
+  position: relative;
+  width: min(84vw, 480px);
+  aspect-ratio: 1.55 / 1;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background: none;
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.envelope:hover { transform: translateY(-6px); }
+body.opening .envelope { cursor: default; transform: none; }
+
+.env-back,
+.env-front,
+.env-flap,
+.env-letter {
+  position: absolute;
+  inset: 0;
+}
+
+/* The pocket — what you see once the flap folds back */
+.env-back {
+  z-index: 1;
+  background: linear-gradient(172deg, var(--pocket), var(--card));
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  box-shadow: var(--shadow), inset 0 12px 24px -14px rgba(0, 0, 0, 0.8);
+}
+
+/* The card, hidden in the pocket until the seal breaks */
+.env-letter {
+  inset: 7% 7% 7% 7%;
+  background: linear-gradient(176deg, var(--stock-2) 0%, var(--stock) 100%);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  z-index: 2;
+  padding: clamp(1rem, 3.6vw, 1.6rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  box-shadow: 0 -8px 22px -12px rgba(0, 0, 0, 0.55);
+  transform: translateY(0);
+  transition: transform 1100ms cubic-bezier(0.3, 0.9, 0.2, 1);
+}
+
+body.opening .env-letter { transform: translateY(-64%); }
+
+.letter-rule {
+  height: 1px;
+  background: var(--rule-firm);
+  opacity: 0.5;
+}
+.letter-rule.short { width: 42%; }
+.letter-rule.mid { width: 70%; }
+
+.letter-mark {
+  font-family: var(--serif);
+  font-size: clamp(1rem, 3.4vw, 1.45rem);
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* Front panel — a full face, so nothing peeks out at the corners */
+.env-front {
+  z-index: 3;
+  background:
+    linear-gradient(198deg, var(--stock-2) 0%, var(--stock) 46%, var(--card-2) 100%);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+/* the fold line the flap sits along, visible once it opens */
+.env-front::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 62%;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+  filter: drop-shadow(0 1px 0 var(--rule));
+}
+
+/* warm spill from the range lights, low on the paper */
+.env-front::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(80% 55% at 50% 128%, var(--floodlight), transparent 72%);
+}
+
+.env-addr {
+  position: absolute;
+  left: 8%;
+  bottom: 6%;
+  z-index: 4;
+  font-family: var(--mono);
+  font-size: clamp(0.56rem, 1.5vw, 0.68rem);
+  letter-spacing: 0.14em;
+  line-height: 1.9;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  text-align: left;
+  transition: opacity 400ms ease;
+}
+.env-addr strong {
+  display: block;
+  color: var(--ink-soft);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+}
+body.opening .env-addr { opacity: 0; }
+
+/* The flap */
+.env-flap {
+  z-index: 5;
+  bottom: auto;
+  height: 62%;
+  background: linear-gradient(186deg, var(--stock-2) 0%, var(--stock) 62%, var(--pocket) 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  filter: drop-shadow(0 1px 0 var(--rule)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.32));
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 1000ms cubic-bezier(0.6, 0, 0.2, 1), z-index 0ms 520ms;
+  backface-visibility: hidden;
+}
+
+body.opening .env-flap {
+  transform: rotateX(-172deg);
+  z-index: 1;
+}
+
+/* The wax seal */
+.seal {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  z-index: 6;
+  width: clamp(56px, 13vw, 74px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border: 0;
+  /* poured wax never sets perfectly round */
+  border-radius: 47% 53% 51% 49% / 52% 48% 52% 48%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 3.2vw, 1.7rem);
+  letter-spacing: 0.06em;
+  color: #3A2409;
+  text-shadow: 0 1px 0 rgba(255, 214, 150, 0.45), 0 -1px 1px rgba(0, 0, 0, 0.35);
+  background:
+    radial-gradient(70% 70% at 36% 30%, rgba(255, 208, 140, 0.5) 0%, rgba(255, 208, 140, 0) 58%),
+    linear-gradient(160deg, #C4842F 0%, var(--wax) 52%, #6E4413 100%);
+  box-shadow:
+    0 8px 18px -8px rgba(0, 0, 0, 0.75),
+    inset 0 -3px 5px rgba(84, 48, 12, 0.55),
+    inset 0 2px 3px rgba(255, 214, 150, 0.30);
+  transition: transform 700ms cubic-bezier(0.5, -0.4, 0.3, 1.4), opacity 600ms ease 200ms;
+}
+
+.seal::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 50% 47% 52% 48% / 48% 52% 48% 52%;
+  border: 1px solid rgba(60, 36, 10, 0.35);
+  box-shadow: inset 0 0 0 1px rgba(255, 210, 150, 0.12);
+}
+
+.envelope:hover .seal { transform: translate(-50%, -50%) scale(1.04); }
+
+body.opening .seal {
+  transform: translate(-50%, -260%) rotate(24deg) scale(0.85);
+  opacity: 0;
+}
+
+.hint {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  transition: opacity 400ms ease;
+}
+.hint .dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--flame);
+  margin-right: 0.6em;
+  vertical-align: middle;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+body.opening .hint { opacity: 0; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+
+/* ============================================================
+   2. THE INVITATION
+   ============================================================ */
+
+.invitation {
+  max-width: 780px;
+  margin: clamp(1rem, 4vw, 3.5rem) auto;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms ease 200ms, transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 200ms;
+}
+
+body.revealed .invitation {
+  opacity: 1;
+  transform: none;
+}
+
+/* Every section shares one spacing rule so nothing fights in the cascade */
+.invitation > section {
+  padding: clamp(2rem, 6vw, 3.25rem) var(--pad);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.invitation > section:first-of-type { border-top: 0; }
+
+/* ---------- hero plate ---------- */
+/* The plate stays dark in both themes — a photographic plate
+   doesn't change with the room it's hung in. */
+
+.invitation > section.plate {
+  position: relative;
+  padding: 0;
+  border-top: 0;
+  gap: 0;
+  display: block;
+  background: #05070C;
+  aspect-ratio: 16 / 11;
+  max-height: 68vh;
+  overflow: hidden;
+}
+
+/* Portrait plate on narrow screens, so the copy never crowds the vehicle */
+@media (max-width: 620px) {
+  .invitation > section.plate {
+    aspect-ratio: 3 / 4;
+    max-height: 76vh;
+  }
+}
+
+#sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.plate-copy {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: clamp(3.5rem, 16vw, 8rem) var(--pad) var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  background: linear-gradient(
+    to top,
+    rgba(5, 7, 12, 0.96) 0%,
+    rgba(5, 7, 12, 0.88) 26%,
+    rgba(5, 7, 12, 0.48) 60%,
+    rgba(5, 7, 12, 0) 100%
+  );
+}
+
+.plate-copy .eyebrow { color: rgba(233, 231, 225, 0.55); }
+.plate-copy .eyebrow .tick { color: #E8A33D; }
+
+.wordmark {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2.3rem, 9vw, 4.4rem);
+  line-height: 0.94;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  text-transform: uppercase;
+  color: #F2F0EA;
+  text-wrap: balance;
+}
+
+.plate-sub {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1rem, 3vw, 1.28rem);
+  color: rgba(233, 231, 225, 0.78);
+}
+
+/* ---------- T-minus ---------- */
+
+.tminus-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.4rem, 2vw, 1.2rem);
+}
+
+.unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: clamp(0.7rem, 2.4vw, 1.1rem) 0.25rem;
+  background: var(--card-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+
+.unit b {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 6.4vw, 2.5rem);
+  line-height: 1;
+  color: var(--amber);
+  font-variant-numeric: tabular-nums;
+}
+
+.unit span {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.tminus-note {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  margin-top: 0.45em;
+  border-radius: 50%;
+  background: var(--flame);
+  box-shadow: 0 0 10px var(--flame);
+  animation: pulse 2.4s ease-in-out infinite;
+  flex: none;
+}
+
+/* ---------- prose + data table ---------- */
+
+.lede {
+  margin: 0;
+  max-width: var(--measure);
+  font-size: clamp(1.02rem, 2.6vw, 1.16rem);
+  color: var(--ink);
+}
+
+.lede + .lede { color: var(--ink-soft); }
+
+.data {
+  display: grid;
+  grid-template-columns: minmax(7rem, 10rem) 1fr;
+  gap: 0;
+}
+
+.data > dt,
+.data > dd {
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+}
+
+.data > dt {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-top: 1.1rem;
+}
+
+.data > dd { color: var(--ink); }
+.data > dd small {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+/* ---------- programme (a real sequence, so it gets times) ---------- */
+
+.programme {
+  display: grid;
+  gap: 0;
+}
+
+.slot {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 5.5rem) 1fr;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--rule);
+  align-items: baseline;
+}
+
+.slot time {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--amber);
+  font-variant-numeric: tabular-nums;
+}
+
+.slot p { margin: 0; }
+.slot p small {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+/* ---------- location ---------- */
+
+.location-grid {
+  display: grid;
+  grid-template-columns: 1fr minmax(180px, 260px);
+  gap: clamp(1.25rem, 4vw, 2rem);
+  align-items: start;
+}
+
+@media (max-width: 620px) {
+  .location-grid { grid-template-columns: 1fr; }
+}
+
+.venue-name {
+  margin: 0;
+  font-size: clamp(1.35rem, 4.4vw, 1.75rem);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.venue-addr {
+  margin: 0;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.coords {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+}
+
+.rangemap {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--card-2);
+}
+
+/* ---------- manifest ---------- */
+
+.manifest-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.search {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  background: var(--card-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0.55rem 0.8rem;
+  min-width: 12rem;
+  flex: 1 1 12rem;
+  max-width: 20rem;
+}
+.search::placeholder { color: var(--ink-faint); }
+
+.manifest {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.guest {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--rule);
+  opacity: 0;
+  transform: translateY(6px);
+  animation: guest-in 500ms ease forwards;
+}
+
+@keyframes guest-in {
+  to { opacity: 1; transform: none; }
+}
+
+.guest[hidden] { display: none; }
+
+.guest .idx {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.guest .who {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.guest .who::after {
+  content: "";
+  flex: 1;
+  height: 0;
+  border-bottom: 1px dotted var(--rule-firm);
+  transform: translateY(-0.28em);
+  min-width: 1.5rem;
+}
+
+.guest .role {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+.guest .plus {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--amber);
+  border: 1px solid var(--amber-dim);
+  background: var(--amber-dim);
+  border-radius: 2px;
+  padding: 0.1rem 0.35rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 1.2rem 0;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+/* ---------- rsvp ---------- */
+
+.rsvp { background: var(--card-2); }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.5rem;
+  border-radius: 3px;
+  border: 1px solid var(--rule-firm);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+
+.btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.btn.primary {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: var(--on-amber);
+}
+.btn.primary:hover {
+  filter: brightness(1.08);
+  color: var(--on-amber);
+}
+
+.btn[aria-pressed="true"] {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: var(--amber-dim);
+}
+
+.rsvp-state {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  min-height: 1.2em;
+}
+
+.colophon {
+  padding: 1.75rem var(--pad) 2.25rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.colophon a { color: inherit; }
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .guest { opacity: 1; transform: none; }
+}
+</style>
+
+<!-- ============================ ENVELOPE ============================ -->
+<div class="scene" id="scene">
+  <div class="scene-inner">
+    <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Break the seal and open your invitation">
+      <div class="env-back"></div>
+
+      <div class="env-letter">
+        <p class="letter-mark">Kubrique</p>
+        <div class="letter-rule"></div>
+        <div class="letter-rule mid"></div>
+        <div class="letter-rule short"></div>
+      </div>
+
+      <div class="env-front"></div>
+      <div class="env-flap"></div>
+
+      <p class="env-addr" id="envAddr">
+        <strong>Reserved for</strong>
+        The bearer of this card
+      </p>
+
+      <span class="seal" id="seal" aria-hidden="true">K</span>
+    </div>
+
+    <p class="hint"><span class="dot"></span>Break the seal</p>
+  </div>
+</div>
+
+<!-- ============================ INVITATION ============================ -->
+<main class="invitation" id="invitation">
+
+  <!-- Hero plate -->
+  <section class="plate">
+    <canvas id="sky" role="img" aria-label="A KUBRIQUE vehicle climbing away from the range at night, its detonation collar lit"></canvas>
+    <div class="plate-copy">
+      <p class="eyebrow"><span class="tick">▸</span> First Light &nbsp;·&nbsp; <span id="heroDate">—</span></p>
+      <h1 class="wordmark">Kubrique</h1>
+      <p class="plate-sub" id="heroSub">The first full-stack firing of the collar. You are invited to stand at the fence.</p>
+    </div>
+  </section>
+
+  <!-- T-minus -->
+  <section aria-labelledby="tminus-h">
+    <p class="eyebrow" id="tminus-h"><span class="tick">▸</span> Time to ignition</p>
+    <div class="tminus-grid" id="tminusGrid">
+      <div class="unit"><b class="num" id="tDays">—</b><span>Days</span></div>
+      <div class="unit"><b class="num" id="tHours">—</b><span>Hours</span></div>
+      <div class="unit"><b class="num" id="tMins">—</b><span>Minutes</span></div>
+      <div class="unit"><b class="num" id="tSecs">—</b><span>Seconds</span></div>
+    </div>
+    <p class="tminus-note"><span class="live-dot"></span><span id="tminusNote">Counting</span></p>
+  </section>
+
+  <!-- The ask -->
+  <section aria-labelledby="invite-h">
+    <p class="eyebrow" id="invite-h"><span class="tick">▸</span> The invitation</p>
+    <p class="lede" id="inviteBody">—</p>
+    <p class="lede" id="inviteBody2">—</p>
+
+    <dl class="data" id="dataTable"></dl>
+  </section>
+
+  <!-- Programme -->
+  <section aria-labelledby="prog-h">
+    <p class="eyebrow" id="prog-h"><span class="tick">▸</span> Order of the evening</p>
+    <div class="programme" id="programme"></div>
+  </section>
+
+  <!-- Location -->
+  <section aria-labelledby="loc-h">
+    <p class="eyebrow" id="loc-h"><span class="tick">▸</span> Where to stand</p>
+    <div class="location-grid">
+      <div style="display:flex; flex-direction:column; gap:0.6rem;">
+        <h2 class="venue-name" id="venueName">—</h2>
+        <p class="venue-addr" id="venueAddr">—</p>
+        <p class="coords num" id="venueCoords">—</p>
+        <p class="lede" id="venueNote" style="font-size:1rem; color:var(--ink-soft);">—</p>
+        <div class="controls" style="margin-top:0.4rem;">
+          <a class="btn" id="mapsLink" href="#" target="_blank" rel="noopener">Open in maps</a>
+          <button class="btn" type="button" id="icsBtn">Add to calendar</button>
+        </div>
+      </div>
+
+      <!-- Range map: concentric safety rings around the pad -->
+      <svg class="rangemap" viewBox="0 0 260 260" role="img" aria-labelledby="rangemap-t">
+        <title id="rangemap-t">Range diagram: concentric safety rings around the pad, with the viewing fence on the northern arc.</title>
+        <g fill="none" stroke="currentColor" opacity="0.28">
+          <circle cx="130" cy="140" r="34"/>
+          <circle cx="130" cy="140" r="62"/>
+          <circle cx="130" cy="140" r="90"/>
+          <circle cx="130" cy="140" r="118"/>
+        </g>
+        <path d="M6 208 Q 80 186 130 206 T 254 190" fill="none" stroke="currentColor" opacity="0.35" stroke-width="1.5"/>
+        <path d="M6 208 Q 80 186 130 206 T 254 190 L254 260 L6 260 Z" fill="currentColor" opacity="0.06"/>
+        <g stroke="currentColor" opacity="0.4">
+          <line x1="130" y1="118" x2="130" y2="162"/>
+          <line x1="108" y1="140" x2="152" y2="140"/>
+        </g>
+        <circle cx="130" cy="140" r="5" fill="#E8A33D"/>
+        <circle cx="130" cy="140" r="11" fill="none" stroke="#E8A33D" opacity="0.5"/>
+        <g fill="currentColor" opacity="0.55" font-family="ui-monospace, monospace" font-size="8" letter-spacing="1.2">
+          <text x="130" y="22" text-anchor="middle">N</text>
+          <text x="130" y="166" text-anchor="middle" fill="#E8A33D">PAD 04</text>
+          <text x="130" y="42" text-anchor="middle">VIEWING FENCE</text>
+          <text x="196" y="238" text-anchor="middle">SHORELINE</text>
+        </g>
+        <line x1="46" y1="52" x2="214" y2="52" stroke="#E8A33D" opacity="0.45" stroke-dasharray="3 4"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Manifest -->
+  <section aria-labelledby="man-h">
+    <div class="manifest-head">
+      <p class="eyebrow" id="man-h"><span class="tick">▸</span> Manifest &nbsp;·&nbsp; <span id="guestCount" class="num">—</span></p>
+      <input class="search" id="guestSearch" type="search" placeholder="Find a name" aria-label="Find a name on the manifest"/>
+    </div>
+    <ul class="manifest" id="manifest"></ul>
+    <p class="empty" id="manifestEmpty" hidden>No one on the manifest by that name.</p>
+  </section>
+
+  <!-- RSVP -->
+  <section class="rsvp" aria-labelledby="rsvp-h">
+    <p class="eyebrow" id="rsvp-h"><span class="tick">▸</span> Reply</p>
+    <p class="lede" id="rsvpAsk">—</p>
+    <div class="controls">
+      <button class="btn primary" type="button" id="rsvpYes" aria-pressed="false">I'll be at the fence</button>
+      <button class="btn" type="button" id="rsvpNo" aria-pressed="false">Send regrets</button>
+      <a class="btn" id="rsvpMail" href="#">Reply by email</a>
+    </div>
+    <p class="rsvp-state" id="rsvpState"></p>
+  </section>
+
+  <footer class="colophon">
+    <span id="colophonLeft">—</span>
+    <span id="colophonRight">—</span>
+  </footer>
+</main>
+
+<script>
+/* ================================================================
+   ▸ EDIT EVERYTHING HERE ◂
+   This is the only block you need to touch. Swap in your real
+   date, venue and names — the page rebuilds itself from this.
+   ================================================================ */
+const CONFIG = {
+  // Include the UTC offset so the countdown is correct everywhere.
+  eventISO: "2026-10-17T19:30:00+01:00",
+  durationHours: 4,
+
+  title: "KUBRIQUE — First Light",
+  heroSub: "The first full-stack firing of the collar. You are invited to stand at the fence.",
+
+  body1: "After four years of drawings, a cylinder finally leaves the ground. First Light is the evening we fire the annular collar and the methalox core together, in the open, in front of the people who argued the architecture into existence.",
+  body2: "Come for the briefing, stay for the noise. The fence opens at dusk and the range stays lit until the last of us gives up on the hold.",
+
+  // Left column is the label, right column the value. Add or remove rows freely.
+  details: [
+    ["Date",       "Saturday 17 October 2026",            "Gates at 18:30 · ignition window opens 21:00"],
+    ["Dress",      "Warm, and something you can ruin",     "It is a coastal range in October. There will be dust."],
+    ["Hosted by",  "The KUBRIQUE working group",           "Open architecture, public domain, no sponsors"],
+    ["Bring",      "Ear defenders and a hard copy of this card", "Both are checked at the fence"]
+  ],
+
+  programme: [
+    ["18:30", "Gates open",            "Coffee, the model shop, and the full-scale collar mock-up"],
+    ["19:15", "Mission briefing",      "Twenty minutes on the flight profile and the abort tree"],
+    ["20:10", "Supper on the apron",   "Long tables, short speeches"],
+    ["21:00", "Ignition window opens", "Holds are likely. Holds are part of it."],
+    ["23:30", "Range stands down",     "Last shuttle to the car park at midnight"]
+  ],
+
+  venue: {
+    name: "Pad 04 · Southern Range Viewing Fence",
+    address: "Cape Verity Test Range, Coast Road, Verity Point",
+    coords: "38°26'12\"N  9°12'40\"W",
+    note: "Park at the North Gate and walk the gravel track east. It is eight minutes, unlit, and worth it.",
+    mapsQuery: "Cape Verity Test Range, Coast Road, Verity Point"
+  },
+
+  // Add "plus" to mark a plus-one.
+  guests: [
+    { name: "Amara Odell",        role: "Flight director" },
+    { name: "Tomasz Ferreira",    role: "Collar aerodynamics", plus: true },
+    { name: "Dr. Ingrid Vasseur", role: "Detonation physics" },
+    { name: "Kwame Boateng",      role: "Structures" },
+    { name: "Sofia Marchetti",    role: "Thermal protection", plus: true },
+    { name: "Ren Nakamura",       role: "Rim generator" },
+    { name: "Hana Ellery",        role: "Range safety" },
+    { name: "Callum Drake",       role: "Propellant handling" },
+    { name: "Priya Raghunathan",  role: "Guidance" },
+    { name: "Erik Lindqvist",     role: "Recovery" },
+    { name: "Nour Haddad",        role: "Illustration" },
+    { name: "Marcus Bell",        role: "Founding contributor", plus: true }
+  ],
+
+  rsvpAsk: "Seats at the fence are counted, not sold. Tell us by 26 September whether to hold yours.",
+  rsvpBy: "26 September 2026",
+  rsvpEmail: "manifest@kubrique.example",
+
+  colophon: ["KUBRIQUE · Public domain", "Conceptual. Nothing here flies yet."]
+};
+/* ================= END OF EDITABLE BLOCK ================= */
+
+
+/* ---------------- envelope ---------------- */
+(function envelope() {
+  const body = document.body;
+  const envelope = document.getElementById("envelope");
+  if (!envelope) return;
+
+  let opened = false;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function open() {
+    if (opened) return;
+    opened = true;
+    body.classList.add("opening");
+    window.setTimeout(function () {
+      body.classList.add("revealed");
+      window.scrollTo(0, 0);
+      const h1 = document.querySelector(".wordmark");
+      if (h1) h1.setAttribute("tabindex", "-1");
+      if (h1 && h1.focus) h1.focus({ preventScroll: true });
+    }, reduce ? 60 : 1750);
+  }
+
+  envelope.addEventListener("click", open);
+  envelope.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+      e.preventDefault();
+      open();
+    }
+  });
+})();
+
+
+/* ---------------- content from CONFIG ---------------- */
+(function content() {
+  const eventDate = new Date(CONFIG.eventISO);
+
+  const heroDate = document.getElementById("heroDate");
+  if (heroDate) {
+    heroDate.textContent = eventDate.toLocaleDateString(undefined, {
+      day: "numeric", month: "long", year: "numeric"
+    });
+  }
+
+  const set = function (id, text) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+
+  set("heroSub", CONFIG.heroSub);
+  set("inviteBody", CONFIG.body1);
+  set("inviteBody2", CONFIG.body2);
+  set("venueName", CONFIG.venue.name);
+  set("venueAddr", CONFIG.venue.address);
+  set("venueCoords", CONFIG.venue.coords);
+  set("venueNote", CONFIG.venue.note);
+  set("rsvpAsk", CONFIG.rsvpAsk);
+  set("colophonLeft", CONFIG.colophon[0]);
+  set("colophonRight", CONFIG.colophon[1]);
+
+  // Data table
+  const dl = document.getElementById("dataTable");
+  if (dl) {
+    CONFIG.details.forEach(function (row) {
+      const dt = document.createElement("dt");
+      dt.textContent = row[0];
+      const dd = document.createElement("dd");
+      dd.appendChild(document.createTextNode(row[1]));
+      if (row[2]) {
+        const s = document.createElement("small");
+        s.textContent = row[2];
+        dd.appendChild(s);
+      }
+      dl.appendChild(dt);
+      dl.appendChild(dd);
+    });
+  }
+
+  // Programme
+  const prog = document.getElementById("programme");
+  if (prog) {
+    CONFIG.programme.forEach(function (row) {
+      const slot = document.createElement("div");
+      slot.className = "slot";
+      const t = document.createElement("time");
+      t.textContent = row[0];
+      const p = document.createElement("p");
+      p.appendChild(document.createTextNode(row[1]));
+      if (row[2]) {
+        const s = document.createElement("small");
+        s.textContent = row[2];
+        p.appendChild(s);
+      }
+      slot.appendChild(t);
+      slot.appendChild(p);
+      prog.appendChild(slot);
+    });
+  }
+
+  // Maps + mail links
+  const maps = document.getElementById("mapsLink");
+  if (maps) {
+    maps.href = "https://www.google.com/maps/search/?api=1&query=" +
+      encodeURIComponent(CONFIG.venue.mapsQuery || CONFIG.venue.address);
+  }
+
+  const mail = document.getElementById("rsvpMail");
+  if (mail) {
+    mail.href = "mailto:" + CONFIG.rsvpEmail +
+      "?subject=" + encodeURIComponent("RSVP — " + CONFIG.title) +
+      "&body=" + encodeURIComponent("Name:\nAttending: yes / no\nGuests:\n");
+  }
+})();
+
+
+/* ---------------- countdown ---------------- */
+(function countdown() {
+  const target = new Date(CONFIG.eventISO).getTime();
+  const days = document.getElementById("tDays");
+  const hours = document.getElementById("tHours");
+  const mins = document.getElementById("tMins");
+  const secs = document.getElementById("tSecs");
+  const note = document.getElementById("tminusNote");
+  if (!days || !hours || !mins || !secs) return;
+
+  const pad = function (n) { return n < 10 ? "0" + n : String(n); };
+
+  function tick() {
+    const diff = target - Date.now();
+
+    if (diff <= 0) {
+      const holdOver = -diff < CONFIG.durationHours * 3600000;
+      days.textContent = "00";
+      hours.textContent = "00";
+      mins.textContent = "00";
+      secs.textContent = "00";
+      if (note) {
+        note.textContent = holdOver
+          ? "Ignition — the range is live"
+          : "First Light has flown. Thank you for standing at the fence.";
+      }
+      return;
+    }
+
+    const s = Math.floor(diff / 1000);
+    days.textContent = String(Math.floor(s / 86400));
+    hours.textContent = pad(Math.floor(s / 3600) % 24);
+    mins.textContent = pad(Math.floor(s / 60) % 60);
+    secs.textContent = pad(s % 60);
+    if (note) note.textContent = "Counting to ignition · local time at the range";
+  }
+
+  tick();
+  window.setInterval(tick, 1000);
+})();
+
+
+/* ---------------- manifest ---------------- */
+(function manifest() {
+  const list = document.getElementById("manifest");
+  const empty = document.getElementById("manifestEmpty");
+  const count = document.getElementById("guestCount");
+  const search = document.getElementById("guestSearch");
+  if (!list) return;
+
+  const rows = [];
+
+  CONFIG.guests.forEach(function (g, i) {
+    const li = document.createElement("li");
+    li.className = "guest";
+    li.style.animationDelay = Math.min(i * 45, 600) + "ms";
+
+    const idx = document.createElement("span");
+    idx.className = "idx";
+    idx.textContent = (i + 1 < 10 ? "0" : "") + (i + 1);
+
+    const who = document.createElement("span");
+    who.className = "who";
+    const nm = document.createElement("span");
+    nm.textContent = g.name;
+    who.appendChild(nm);
+    if (g.plus) {
+      const p = document.createElement("span");
+      p.className = "plus";
+      p.textContent = "+1";
+      who.appendChild(p);
+    }
+
+    const role = document.createElement("span");
+    role.className = "role";
+    role.textContent = g.role || "";
+
+    li.appendChild(idx);
+    li.appendChild(who);
+    li.appendChild(role);
+    list.appendChild(li);
+    rows.push({ el: li, hay: (g.name + " " + (g.role || "")).toLowerCase() });
+  });
+
+  const heads = CONFIG.guests.length;
+  const plusOnes = CONFIG.guests.filter(function (g) { return g.plus; }).length;
+  if (count) {
+    count.textContent = heads + " invited" + (plusOnes ? " · " + plusOnes + " with a guest" : "");
+  }
+
+  if (search) {
+    search.addEventListener("input", function () {
+      const q = search.value.trim().toLowerCase();
+      let shown = 0;
+      rows.forEach(function (r) {
+        const hit = !q || r.hay.indexOf(q) !== -1;
+        r.el.hidden = !hit;
+        if (hit) shown++;
+      });
+      if (empty) empty.hidden = shown !== 0;
+    });
+  }
+})();
+
+
+/* ---------------- rsvp ---------------- */
+(function rsvp() {
+  const yes = document.getElementById("rsvpYes");
+  const no = document.getElementById("rsvpNo");
+  const state = document.getElementById("rsvpState");
+  if (!yes || !no || !state) return;
+
+  const KEY = "kubrique-first-light-rsvp";
+
+  function paint(value) {
+    yes.setAttribute("aria-pressed", value === "yes" ? "true" : "false");
+    no.setAttribute("aria-pressed", value === "no" ? "true" : "false");
+    if (value === "yes") {
+      state.textContent = "Saved on this device — your place at the fence is held. Reply by " + CONFIG.rsvpBy + " to confirm it with us.";
+    } else if (value === "no") {
+      state.textContent = "Saved on this device — regrets noted. Send the email if you want it on the record.";
+    } else {
+      state.textContent = "";
+    }
+  }
+
+  function choose(value) {
+    try { window.localStorage.setItem(KEY, value); } catch (e) { /* private mode */ }
+    paint(value);
+  }
+
+  let stored = null;
+  try { stored = window.localStorage.getItem(KEY); } catch (e) { stored = null; }
+  paint(stored);
+
+  yes.addEventListener("click", function () { choose("yes"); });
+  no.addEventListener("click", function () { choose("no"); });
+})();
+
+
+/* ---------------- add to calendar ---------------- */
+(function calendar() {
+  const btn = document.getElementById("icsBtn");
+  if (!btn) return;
+
+  function stamp(d) {
+    return d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  }
+
+  btn.addEventListener("click", function () {
+    const start = new Date(CONFIG.eventISO);
+    const end = new Date(start.getTime() + CONFIG.durationHours * 3600000);
+    const lines = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//KUBRIQUE//First Light//EN",
+      "BEGIN:VEVENT",
+      "UID:first-light@kubrique.invalid",
+      "DTSTAMP:" + stamp(new Date()),
+      "DTSTART:" + stamp(start),
+      "DTEND:" + stamp(end),
+      "SUMMARY:" + CONFIG.title,
+      "LOCATION:" + CONFIG.venue.name + ", " + CONFIG.venue.address,
+      "DESCRIPTION:" + CONFIG.heroSub,
+      "END:VEVENT",
+      "END:VCALENDAR"
+    ];
+    const blob = new Blob([lines.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "kubrique-first-light.ics";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  });
+})();
+
+
+/* ================================================================
+   HERO PLATE — the can climbing off the range at night.
+   Canvas, so the plume flickers and the detonation collar carries a
+   hotspot that actually rotates around the annulus.
+   ================================================================ */
+(function sky() {
+  const canvas = document.getElementById("sky");
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext("2d");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let W = 0, H = 0, stars = [], embers = [];
+  let px = 0, py = 0, tx = 0, ty = 0; // parallax
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const r = canvas.getBoundingClientRect();
+    W = Math.max(r.width, 1);
+    H = Math.max(r.height, 1);
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    seed();
+  }
+
+  function seed() {
+    stars = [];
+    const n = Math.round((W * H) / 5200);
+    for (let i = 0; i < n; i++) {
+      stars.push({
+        x: Math.random() * W,
+        y: Math.random() * H * 0.86,
+        r: Math.random() < 0.9 ? rand(0.35, 0.9) : rand(1, 1.6),
+        a: rand(0.2, 0.85),
+        tw: rand(0.4, 1.7),
+        ph: rand(0, 6.283),
+        d: rand(0.25, 1) // parallax depth
+      });
+    }
+    embers = [];
+    for (let i = 0; i < 26; i++) {
+      embers.push({ t: Math.random(), s: rand(0.25, 0.75), o: rand(-1, 1) });
+    }
+  }
+
+  function drawSky() {
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#04060B");
+    g.addColorStop(0.42, "#0A1220");
+    g.addColorStop(0.72, "#111C2C");
+    g.addColorStop(1, "#1B2231");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    // sodium haze from the pad floodlights, low and warm
+    const haze = ctx.createRadialGradient(W * 0.5, H * 1.02, 0, W * 0.5, H * 1.02, H * 0.75);
+    haze.addColorStop(0, "rgba(232,163,61,0.30)");
+    haze.addColorStop(0.5, "rgba(232,163,61,0.09)");
+    haze.addColorStop(1, "rgba(232,163,61,0)");
+    ctx.fillStyle = haze;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  function drawStars(t) {
+    for (let i = 0; i < stars.length; i++) {
+      const s = stars[i];
+      const a = s.a * (0.62 + 0.38 * Math.sin(t * s.tw + s.ph));
+      ctx.globalAlpha = Math.max(a, 0);
+      ctx.fillStyle = "#DCE6F2";
+      ctx.beginPath();
+      ctx.arc(s.x + px * s.d * 14, s.y + py * s.d * 9, s.r, 0, 6.2832);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawHorizon() {
+    // the planet limb: a very large circle whose crown sits low in frame
+    const cx = W * 0.5;
+    const r = W * 2.4;
+    const cy = H * 0.868 + r;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, 6.2832);
+    const land = ctx.createLinearGradient(0, H * 0.84, 0, H);
+    land.addColorStop(0, "#0A0E15");
+    land.addColorStop(1, "#04060A");
+    ctx.fillStyle = land;
+    ctx.fill();
+
+    // rim light along the limb
+    ctx.strokeStyle = "rgba(232,163,61,0.42)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+    ctx.restore();
+
+    // the range below: floodlights on the deck, and the pad itself
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    for (let i = 0; i < 9; i++) {
+      const lx = W * (0.05 + i * 0.115);
+      const ly = H * (0.882 + (i % 3) * 0.011);
+      const rr = W * 0.05;
+      const gg = ctx.createRadialGradient(lx, ly, 0, lx, ly, rr);
+      gg.addColorStop(0, "rgba(255,206,138,0.42)");
+      gg.addColorStop(1, "rgba(255,206,138,0)");
+      ctx.fillStyle = gg;
+      ctx.beginPath();
+      ctx.arc(lx, ly, rr, 0, 6.2832);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255,226,180,0.7)";
+      ctx.fillRect(lx - 0.6, ly - 0.6, 1.2, 1.2);
+    }
+    ctx.restore();
+  }
+
+  function roundedRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function drawVehicle(t) {
+    // Small in frame and high up: the drama is in the distance it has
+    // already covered, not in the size of the object.
+    const bw = Math.max(Math.min(W * 0.030, 34), 15);      // body width
+    const bh = bw * 4.6;                                    // body height
+    const bob = reduce ? 0 : Math.sin(t * 0.7) * bw * 0.14;
+    const cx = W * 0.665 + px * 18;
+    const top = H * 0.115 + bob + py * 11;
+
+    const x = cx - bw / 2;
+
+    // The smoke column it climbed out of. Built from soft puffs rather
+    // than one wedge, so it has no geometry to give itself away.
+    const groundY = H * 0.865;
+    const lean = bw * 3.2;
+    const startY = top + bh * 0.95;
+
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    const steps = 26;
+    for (let i = 0; i < steps; i++) {
+      const f = i / (steps - 1);
+      const yy = startY + f * (groundY - startY);
+      const xx = cx - lean * f * f;
+      const rr = bw * (0.55 + f * 3.4);
+      const a = 0.085 * (1 - f * 0.7);
+      const puff = ctx.createRadialGradient(xx, yy, 0, xx, yy, rr);
+      puff.addColorStop(0, "rgba(224,201,180," + a + ")");
+      puff.addColorStop(0.6, "rgba(206,184,168," + a * 0.4 + ")");
+      puff.addColorStop(1, "rgba(206,184,168,0)");
+      ctx.fillStyle = puff;
+      ctx.beginPath();
+      ctx.arc(xx, yy, rr, 0, 6.2832);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    // ---- plume -------------------------------------------------
+    const flick = reduce ? 1 : 0.86 + Math.sin(t * 21) * 0.07 + Math.sin(t * 37) * 0.05;
+    const pl = bh * 1.75 * flick;
+    const py0 = top + bh;
+
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+
+    // outer wash
+    const outer = ctx.createLinearGradient(0, py0, 0, py0 + pl);
+    outer.addColorStop(0, "rgba(147,212,230,0.55)");
+    outer.addColorStop(0.35, "rgba(120,170,220,0.22)");
+    outer.addColorStop(1, "rgba(90,130,190,0)");
+    ctx.fillStyle = outer;
+    ctx.beginPath();
+    ctx.moveTo(cx - bw * 0.46, py0);
+    ctx.quadraticCurveTo(cx - bw * 0.72, py0 + pl * 0.45, cx, py0 + pl);
+    ctx.quadraticCurveTo(cx + bw * 0.72, py0 + pl * 0.45, cx + bw * 0.46, py0);
+    ctx.closePath();
+    ctx.fill();
+
+    // inner core
+    const inner = ctx.createLinearGradient(0, py0, 0, py0 + pl * 0.6);
+    inner.addColorStop(0, "rgba(255,255,255,0.95)");
+    inner.addColorStop(0.3, "rgba(196,232,244,0.7)");
+    inner.addColorStop(1, "rgba(147,212,230,0)");
+    ctx.fillStyle = inner;
+    ctx.beginPath();
+    ctx.moveTo(cx - bw * 0.2, py0);
+    ctx.quadraticCurveTo(cx - bw * 0.24, py0 + pl * 0.3, cx, py0 + pl * 0.6);
+    ctx.quadraticCurveTo(cx + bw * 0.24, py0 + pl * 0.3, cx + bw * 0.2, py0);
+    ctx.closePath();
+    ctx.fill();
+
+    // mach diamonds
+    for (let i = 0; i < 4; i++) {
+      const dy = py0 + pl * (0.1 + i * 0.13);
+      const dw = bw * (0.15 - i * 0.025);
+      ctx.fillStyle = "rgba(255,255,255," + (0.34 - i * 0.07) + ")";
+      ctx.beginPath();
+      ctx.moveTo(cx, dy - dw);
+      ctx.lineTo(cx + dw, dy);
+      ctx.lineTo(cx, dy + dw);
+      ctx.lineTo(cx - dw, dy);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // embers, drifting back down the column toward the pad
+    if (!reduce) {
+      for (let i = 0; i < embers.length; i++) {
+        const e = embers[i];
+        e.t += 0.0035 * e.s;
+        if (e.t > 1) e.t = 0;
+        const ey = py0 + pl * 0.25 + e.t * (groundY - py0);
+        const ex = cx + e.o * bw * (0.4 + e.t * 2.2) - lean * e.t * 0.9;
+        ctx.fillStyle = "rgba(255,196,120," + (0.5 * (1 - e.t)) + ")";
+        ctx.beginPath();
+        ctx.arc(ex, ey, 0.9 * e.s + 0.35, 0, 6.2832);
+        ctx.fill();
+      }
+    }
+
+    // one anamorphic streak off the collar — it is a plate, after all
+    const streakY = top + bh * 0.42;
+    const sw = bw * 4.5;
+    const st = ctx.createLinearGradient(cx - sw, 0, cx + sw, 0);
+    st.addColorStop(0, "rgba(147,212,230,0)");
+    st.addColorStop(0.5, "rgba(170,222,238,0.16)");
+    st.addColorStop(1, "rgba(147,212,230,0)");
+    ctx.fillStyle = st;
+    ctx.fillRect(cx - sw, streakY - 0.6, sw * 2, 1.2);
+    ctx.restore();
+
+    // ---- body: the can ----------------------------------------
+    const body = ctx.createLinearGradient(x, 0, x + bw, 0);
+    body.addColorStop(0, "#0F131A");
+    body.addColorStop(0.18, "#2C333E");
+    body.addColorStop(0.42, "#707B8A");
+    body.addColorStop(0.58, "#4C5561");
+    body.addColorStop(0.84, "#1E242D");
+    body.addColorStop(1, "#0C0F15");
+
+    roundedRect(x, top, bw, bh, bw * 0.46);
+    ctx.fillStyle = body;
+    ctx.fill();
+
+    // nose shading
+    ctx.save();
+    roundedRect(x, top, bw, bh, bw * 0.46);
+    ctx.clip();
+    const nose = ctx.createLinearGradient(0, top, 0, top + bw * 1.2);
+    nose.addColorStop(0, "rgba(255,225,190,0.30)");
+    nose.addColorStop(1, "rgba(255,225,190,0)");
+    ctx.fillStyle = nose;
+    ctx.fillRect(x, top, bw, bw * 1.2);
+
+    // thermal protection banding down the lower body
+    ctx.fillStyle = "rgba(0,0,0,0.22)";
+    for (let i = 0; i < 6; i++) {
+      ctx.fillRect(x, top + bh * (0.62 + i * 0.055), bw, bh * 0.016);
+    }
+
+    // window band
+    ctx.fillStyle = "rgba(147,212,230,0.5)";
+    ctx.fillRect(x + bw * 0.18, top + bh * 0.16, bw * 0.64, bh * 0.012);
+    ctx.restore();
+
+    // outline
+    roundedRect(x, top, bw, bh, bw * 0.46);
+    ctx.strokeStyle = "rgba(220,232,245,0.22)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // ---- the rotating detonation collar ------------------------
+    // Three annular bands. A hotspot travels around each one, which is
+    // the whole conceit of the architecture — so it is the one thing
+    // in this picture allowed to be bright.
+    const collarY = [0.34, 0.42, 0.50];
+    const cw = bw * 1.14;
+    const cx0 = cx - cw / 2;
+    for (let c = 0; c < collarY.length; c++) {
+      const cy2 = top + bh * collarY[c];
+      const ch = Math.max(bh * 0.032, 2.5);
+
+      ctx.fillStyle = "rgba(8,11,16,0.94)";
+      ctx.fillRect(cx0, cy2, cw, ch);
+
+      // hotspot sweeping the annulus, offset per ring
+      const phase = reduce ? 0.25 : (t * 1.35 + c * 0.37) % 1;
+      const hx = cx0 + phase * cw;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(cx0, cy2, cw, ch);
+      ctx.clip();
+      ctx.globalCompositeOperation = "lighter";
+      const hs = ctx.createRadialGradient(hx, cy2 + ch / 2, 0, hx, cy2 + ch / 2, bw * 0.55);
+      hs.addColorStop(0, "rgba(255,250,238,1)");
+      hs.addColorStop(0.3, "rgba(176,226,242,0.75)");
+      hs.addColorStop(1, "rgba(147,212,230,0)");
+      ctx.fillStyle = hs;
+      ctx.fillRect(cx0 - bw, cy2 - ch, cw + bw * 2, ch * 3);
+      ctx.restore();
+
+      // machined edges
+      ctx.fillStyle = "rgba(206,220,236,0.30)";
+      ctx.fillRect(cx0, cy2, cw, 0.6);
+      ctx.fillRect(cx0, cy2 + ch - 0.6, cw, 0.6);
+
+      // spill light onto the sky around the collar
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      const R = bw * 2.6;
+      const spill = ctx.createRadialGradient(cx, cy2 + ch / 2, 0, cx, cy2 + ch / 2, R);
+      spill.addColorStop(0, "rgba(147,212,230,0.10)");
+      spill.addColorStop(0.45, "rgba(120,180,215,0.025)");
+      spill.addColorStop(1, "rgba(147,212,230,0)");
+      ctx.fillStyle = spill;
+      ctx.beginPath();
+      ctx.arc(cx, cy2 + ch / 2, R, 0, 6.2832);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // engine skirt
+    ctx.fillStyle = "#0A0D13";
+    roundedRect(x - bw * 0.07, top + bh - bh * 0.03, bw * 1.14, bh * 0.042, 1.5);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(200,215,232,0.22)";
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  }
+
+  // A whisper of grain so the plate reads as a photograph. Rendered once
+  // into a tile and blitted, rather than 900 rects a frame.
+  let grainTile = null;
+  function buildGrain() {
+    const size = 128;
+    const c = document.createElement("canvas");
+    c.width = size;
+    c.height = size;
+    const g = c.getContext("2d");
+    const img = g.createImageData(size, size);
+    for (let i = 0; i < img.data.length; i += 4) {
+      const v = 128 + (Math.random() - 0.5) * 255;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+      img.data[i + 3] = 255;
+    }
+    g.putImageData(img, 0, 0);
+    grainTile = ctx.createPattern(c, "repeat");
+  }
+
+  function grain() {
+    if (!grainTile) return;
+    ctx.save();
+    ctx.globalAlpha = 0.05;
+    ctx.globalCompositeOperation = "overlay";
+    ctx.fillStyle = grainTile;
+    ctx.fillRect(0, 0, W, H);
+    ctx.restore();
+  }
+
+  function vignette() {
+    const v = ctx.createRadialGradient(W * 0.5, H * 0.45, Math.min(W, H) * 0.25, W * 0.5, H * 0.5, Math.max(W, H) * 0.8);
+    v.addColorStop(0, "rgba(0,0,0,0)");
+    v.addColorStop(1, "rgba(0,0,0,0.62)");
+    ctx.fillStyle = v;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  let start = null;
+  function frame(now) {
+    if (start === null) start = now;
+    const t = (now - start) / 1000;
+
+    px += (tx - px) * 0.06;
+    py += (ty - py) * 0.06;
+
+    drawSky();
+    drawStars(t);
+    drawVehicle(t);
+    drawHorizon();
+    vignette();
+    grain();
+
+    if (!reduce) window.requestAnimationFrame(frame);
+  }
+
+  window.addEventListener("resize", function () {
+    resize();
+    if (reduce) frame(0);
+  });
+
+  canvas.addEventListener("pointermove", function (e) {
+    const r = canvas.getBoundingClientRect();
+    tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+    ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+  });
+  canvas.addEventListener("pointerleave", function () { tx = 0; ty = 0; });
+
+  buildGrain();
+  resize();
+  window.requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

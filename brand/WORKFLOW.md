@@ -23,7 +23,7 @@ Output lands in `brand/work/orbital/`:
 - `A/`, `B/`, `C/`, `D/`: the four candidate constructions with review renders
 - `final/mark-static.svg`, `final/mark-animated.svg`, `final/frames.png`
 
-The refiner also overwrites `brand/kubrique-logo-static.svg` and `brand/kubrique-logo.svg` with the finished mark.
+The refiner also overwrites `brand/crescent-x-static.svg` and `brand/crescent-x.svg` with the finished mark.
 
 ## Options
 

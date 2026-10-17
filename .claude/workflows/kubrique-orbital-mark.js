@@ -168,7 +168,7 @@ YOUR JOB
    - COLOUR CYCLE: the metal/glass colours drift through a cycle (for example gold -> rose -> violet -> teal -> gold) over ~24s using SMIL <animate attributeName="stop-color"> on gradient stops or on fills. Use SMIL or CSS inside the SVG only; it must animate when the SVG is opened directly in a browser and when used in an <img>. No JavaScript.
    - Respect prefers-reduced-motion with a CSS media query that pauses the CSS animations (SMIL cannot be paused by CSS; keep the SMIL colour drift gentle).
 3. Prove the animation: render at least 4 frames at different times into ONE side-by-side PNG ${WORK}/final/frames.png. Technique: lay four copies of the SVG in one HTML page, each copy with its CSS animations given a different negative animation-delay (0s, -6s, -12s, -18s) and its SMIL animations given begin="-6s" etc., then screenshot once. LOOK at frames.png and confirm the rings visibly spin and the colour visibly changes between frames.
-4. Also copy the finished files to brand/kubrique-logo-static.svg and brand/kubrique-logo.svg (overwrite the drafts there).
+4. Also copy the finished files to brand/crescent-x-static.svg and brand/crescent-x.svg (overwrite the drafts there). The mark is named "Crescent X": keep that as the SVG <title> and in the aria-label..
 5. Keep the static SVG under ~40KB and the animated one under ~60KB. Both must be valid XML (python -c "import xml.dom.minidom,sys; xml.dom.minidom.parse(sys.argv[1])" <file>).
 Return ABSOLUTE paths.`,
   { label: 'refine:final', phase: 'Refine', schema: REFINE_SCHEMA })

@@ -22,3 +22,16 @@ Recraft V4.1 vector attempts (indices 0–3) drifted into a ringed planet, three
 - Video: 4 = a4f23a0b-6f20-41e1-af0d-663cfb7c1bd1, 5 = f73403ac-c4f5-4381-936b-1d4941a240fd
 
 Credits spent: about 50 of 844.
+
+## Crescent redraw (18 Oct 2026, later)
+
+Client prompt: keep the X bands and wordmark, redraw only the outer crescent as a balanced lunar crescent opening left, short symmetrical horns, no sword-like sweep.
+Source: `brand/reference/crescent-x-reference-crop.png` (the approved ChatGPT concept). Model: gpt_image_2_5, two variants.
+
+| Variant | Job | Result |
+|---|---|---|
+| A | db824127-8587-43f2-8869-3384bc33aad2 | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_193819_db824127-8587-43f2-8869-3384bc33aad2.png) |
+| B | 24999f71-f227-46a5-93f3-33a3b018f15f | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_193819_24999f71-f227-46a5-93f3-33a3b018f15f.png) |
+
+Both: horns at about 10:30 and 7:30, near-circular arcs, lower horn tucks behind the descending ring end. B is slightly lighter in the crescent body.
+The same crescent spec is applied in the vector build (brand/work/crescent-x/final).

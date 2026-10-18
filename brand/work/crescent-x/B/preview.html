@@ -1,0 +1,60 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>CRESCENT X - construction B review</title>
+<style>
+  html,body{margin:0;padding:0;background:#fff}
+  body{width:1200px;height:1000px;font:12px/1.3 system-ui,sans-serif;color:#555;position:relative;overflow:hidden}
+  .lbl{position:absolute;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+  .ov{position:absolute;left:840px;top:20px;width:340px;height:346px;overflow:hidden;background:#fff}
+  .ov img{position:absolute}
+  .dark{position:absolute;left:0;top:450px;width:1200px;height:550px;background:#0d0e13;color:#8a8f9a}
+  .sm{position:absolute;display:flex;gap:26px;align-items:flex-end}
+  .sm div{display:flex;flex-direction:column;align-items:center;gap:6px}
+  img{display:block}
+</style></head><body>
+<img src="file:///tmp/claude-0/-home-user-Kubrique-/1089e9da-6911-5cb8-8308-49f4fb2445d5/scratchpad/orbital/target-crop.png" style="position:absolute;left:10px;top:12px;width:420px;height:428px">
+<div class="lbl" style="left:14px;top:0">reference</div>
+<img src="mark.svg" style="position:absolute;left:430px;top:16px;width:420px;height:420px">
+<div class="lbl" style="left:434px;top:0">mark.svg 420px</div>
+<div class="ov"><img src="file:///tmp/claude-0/-home-user-Kubrique-/1089e9da-6911-5cb8-8308-49f4fb2445d5/scratchpad/orbital/target-crop.png" style="left:-91.02px;top:-57.37px;width:510px;height:519.15px"><img src="mark-overlay.svg" style="left:-28.07px;top:-25.07px;width:396.13px;height:396.13px;opacity:.62"></div>
+<div class="lbl" style="left:844px;top:0">overlay (red = mine)</div>
+<div class="sm" style="left:850px;top:382px">
+  <div><img src="mark.svg" width="64" height="64"><span>64</span></div>
+  <div><img src="mark.svg" width="40" height="40"><span>40</span></div>
+  <div><img src="mark.svg" width="24" height="24"><span>24</span></div>
+  <div><img src="mark.svg" width="16" height="16"><span>16</span></div>
+</div>
+<div class="dark">
+  <img src="mark-light.svg" style="position:absolute;left:40px;top:60px;width:420px;height:420px">
+  <div class="lbl" style="left:44px;top:40px">mark-light.svg 420px on #0d0e13</div>
+  <div class="sm" style="left:520px;top:200px">
+    <div><img src="mark-light.svg" width="120" height="120"><span>120</span></div>
+    <div><img src="mark-light.svg" width="64" height="64"><span>64</span></div>
+    <div><img src="mark-light.svg" width="40" height="40"><span>40</span></div>
+    <div><img src="mark-light.svg" width="24" height="24"><span>24</span></div>
+    <div><img src="mark-light.svg" width="16" height="16"><span>16</span></div>
+  </div>
+  <div style="position:absolute;left:520px;top:380px;width:640px;white-space:pre-wrap;font-size:11px">crescent: R=365.9 r=344.0 d=35.0 psi=182.50  horns top=(389,242) bottom=(365,795)  tip half-angle=49.1
+crescent width by angle: -120:4 -100:16 -80:28 -60:39 -40:48 -20:54 0:57 20:55 40:50 60:42 80:31 100:19 120:7
+x1: centre=(548,537) a=372 b=86 th=27.3 lens a2=345 h1=-80 h2=0 band widths at centre 6(-n) / 86(+n); lens margin to outer ellipse 5.3
+   tip A at (218,366): outside the outer circle
+   tip B at (879,708): in crescent band, 4.0 px past the inner edge
+x2: centre=(560,550) a=377 b=94 th=-30.0 lens a2=324 h1=-51 h2=64 band widths at centre 43(-n) / 30(+n); lens margin to outer ellipse 30.7
+   tip A at (234,739): outside the outer circle
+   tip B at (887,362): in crescent band, 3.1 px past the inner edge
+crescent top horn at (389,242): free; nearest ring edge 128.6 px
+crescent bottom horn at (365,795): free; nearest ring edge 52.0 px
+bbox (ref px) = (215.4, 162.6, 982.2, 894.4)  size 767 x 732; scale 0.5634; gap 2.82 viewBox px
+crossings:
+   crescent x x1 at (407.3,362.8) [2 edge hits: crescent.innerxx1.outer] -> x1 over crescent
+   crescent x x2 at (420.1,169.7) [2 edge hits: crescent.innerxx2.outer] -> x2 over crescent
+   x1 x x2 at (245.1,323.1) [2 edge hits: x1.outerxx2.lens, x1.outerxx2.outer] -> x1 over x2
+   x1 x x2 at (139.9,266.4) [1 edge hits: x1.outerxx2.outer] -> x1 over x2
+   x1 x x2 at (232.3,208.9) [2 edge hits: x1.lensxx2.outer, x1.outerxx2.outer] -> x1 over x2
+   x1 x x2 at (333.4,267.0) [4 edge hits: x1.lensxx2.lens, x1.lensxx2.outer, x1.outerxx2.lens, x1.outerxx2.outer] -> x1 over x2
+   x1 x x2 at (163.7,280.9) [1 edge hits: x1.outerxx2.lens] -> x1 over x2
+   x1 x x2 at (256.8,221.4) [2 edge hits: x1.lensxx2.lens, x1.outerxx2.lens] -> x1 over x2
+   x1 x x2 at (183.7,237.0) [1 edge hits: x1.lensxx2.outer] -> x1 over x2
+   x1 x x2 at (292.1,295.3) [2 edge hits: x1.lensxx2.lens, x1.lensxx2.outer] -> x1 over x2
+   x1 x x2 at (208.8,250.5) [1 edge hits: x1.lensxx2.lens] -> x1 over x2</div>
+</div>
+</body></html>

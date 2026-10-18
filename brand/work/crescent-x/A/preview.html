@@ -1,0 +1,42 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Crescent X - A review</title>
+<style>
+  body{margin:0;background:#fff;font:12px/1.3 Helvetica,Arial,sans-serif;color:#333}
+  .row{display:flex;gap:14px;align-items:flex-start;padding:10px 10px 0}
+  .box{position:relative;overflow:hidden;background:#fff}
+  .lab{position:absolute;left:6px;top:4px;font-size:11px;color:#888;z-index:2}
+  .ref{width:320px;height:311px}
+  .ref img{position:absolute;left:-63px;top:-42px;width:435px}
+  .mine{width:320px;height:311px}
+  .mine img{position:absolute;left:1px;top:-5px;width:318px;height:318px}
+  .ovl{width:320px;height:311px}
+  .ovl img.r{position:absolute;left:-63px;top:-42px;width:435px;opacity:.35}
+  .ovl img.m{position:absolute;left:1px;top:-5px;width:318px;height:318px;opacity:.75;filter:invert(1) sepia(1) saturate(30) hue-rotate(-20deg)}
+  .dark{width:420px;height:420px;background:#0d0e13}
+  .dark img{width:420px;height:420px;display:block}
+  .smalls{display:flex;flex-direction:column;gap:8px}
+  .sm{display:flex;gap:8px;align-items:center;padding:6px;background:#fff}
+  .sm.d{background:#0d0e13}
+  .zoom{width:220px;height:200px;overflow:hidden;position:relative;background:#fff}
+  .zoom img{position:absolute;width:640px;height:640px}
+</style></head><body>
+<div class="row">
+  <div class="box ref"><span class="lab">reference</span><img src="file:///tmp/claude-0/-home-user-Kubrique-/1089e9da-6911-5cb8-8308-49f4fb2445d5/scratchpad/orbital/target-crop.png"></div>
+  <div class="box mine"><span class="lab">A / mark.svg</span><img src="mark.svg"></div>
+  <div class="box ovl"><span class="lab">overlay (mine = orange)</span><img class="r" src="file:///tmp/claude-0/-home-user-Kubrique-/1089e9da-6911-5cb8-8308-49f4fb2445d5/scratchpad/orbital/target-crop.png"><img class="m" src="mark.svg"></div>
+  <div class="box dark"><img src="mark-light.svg"></div>
+  <div class="smalls">
+    <div class="sm"><img src="mark.svg" width="40" height="40"><img src="mark.svg" width="24" height="24"></div>
+    <div class="sm d"><img src="mark-light.svg" width="40" height="40"><img src="mark-light.svg" width="24" height="24"></div>
+    <div class="sm"><img src="mark.svg" width="64" height="64"></div>
+    <div class="sm d"><img src="mark-light.svg" width="64" height="64"></div>
+  </div>
+</div>
+<div class="row">
+  <div class="zoom"><span class="lab">centre x2</span><img src="mark.svg" style="left:-190px;top:-250px"></div>
+  <div class="zoom"><span class="lab">x1 tip / crescent x2</span><img src="mark.svg" style="left:-370px;top:-390px"></div>
+  <div class="zoom"><span class="lab">x2 tip / crescent x2</span><img src="mark.svg" style="left:-370px;top:-80px"></div>
+  <div class="zoom"><span class="lab">x1 horn x2</span><img src="mark.svg" style="left:-10px;top:-100px"></div>
+  <div class="zoom"><span class="lab">x2 lower-left x2</span><img src="mark.svg" style="left:-10px;top:-380px"></div>
+</div>
+</body></html>

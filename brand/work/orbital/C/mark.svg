@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Kubrique mark - construction C, flat knot emblem</title>
+  <desc>Crescent + X built from three interlocking orbital rings, drawn as a strictly two-tone
+emblem (one brass fill, transparent cuts). The crescent is a hoop seen nearly face-on and tilted
+(lune between two ellipses); the X is two hoops seen nearly edge-on (thin ellipses). Every crossing
+is an alternating over/under: X1 over crescent (both limbs), X2 over X1 (hub), crescent over X2
+(thick base). The under-ring is cut by the over-ring dilated by 7.5 units, so each ring is a set
+of explicit front/back pieces; no masks, no clipPaths, no gradients. Hide #detail below ~64px.</desc>
+  <g id="mark" fill="#C9A24E" fill-rule="evenodd">
+  <!-- ring-crescent: hoop seen nearly face-on, tilted. Outer rim ellipse (200x186), inner rim ellipse (160x148.8) offset toward the opening. Pieces split by the X1 cut: body (centre) + two horns. -->
+  <g id="ring-crescent">
+    <!-- body: FRONT over X2 at the thick base; BACK under X1 (cut on both limbs) -->
+    <path id="ring-crescent-body" d="M374.81 412.78 A200 186 45 0 1 99.22 137.19 A247.5 43.5 45 0 0 151.48 206.75 A160 148.8 45 0 0 305.45 360.59 A247.5 43.5 45 0 0 374.81 412.74 Z"/>
+    <!-- horn-right: BACK: horn beyond the X1 cut, tapers to nothing (points right) -->
+    <path id="ring-crescent-horn-right" d="M458.62 238.68 A200 186 45 0 1 415.38 378.99 A247.5 43.5 45 0 0 389.72 341.8 A160 148.8 45 0 0 458.55 238.68 Z"/>
+    <!-- horn-upper: BACK: horn beyond the X1 cut, tapers to nothing (points up) -->
+    <path id="ring-crescent-horn-upper" d="M133.01 96.62 A200 186 45 0 1 273.32 53.38 A160 148.8 45 0 0 170.21 122.28 A247.5 43.5 45 0 0 133.01 96.65 Z"/>
+  </g>
+  <!-- ring-x1: hoop seen nearly edge-on, upper-left to lower-right (ellipse 240x36 rotated 45). Over the crescent at both limbs, under X2 at the hub (hence the two arm pieces). -->
+  <g id="ring-x1">
+    <!-- arm-lr: FRONT over crescent (lower-right limb); ends at the cut where X2 passes over -->
+    <path id="ring-x1-arm-lr" d="M311.49 261.4 A240 36 45 0 1 261.4 311.49 A43.5 247.5 45 0 0 311.48 261.4 Z"/>
+    <!-- arm-ul: FRONT over crescent (upper-left limb); ends at the cut where X2 passes over -->
+    <path id="ring-x1-arm-ul" d="M200.51 250.6 A240 36 45 0 1 250.6 200.51 A43.5 247.5 45 0 0 200.52 250.6 Z"/>
+  </g>
+  <!-- ring-x2: hoop seen nearly edge-on, lower-left to upper-right (ellipse 36x240 rotated 135). Over X1 at the hub, under the crescent at the thick base (hence arm + tail pieces). The hub piece carries the transparent halo (hole) and the core dot is a separate piece. -->
+  <g id="ring-x2">
+    <!-- arm-ur: FRONT over X1 at the hub; BACK under the crescent (cut at its inner rim); exits through the horns -->
+    <path id="ring-x2-arm-ur" d="M183.74 279.41 A36 240 45 1 1 232.59 328.26 A152.5 141.3 45 0 1 183.74 279.38 Z"/>
+    <!-- core: luminous core dot, sits on the X2 band at the hub -->
+    <path id="ring-x2-core" d="M266 256 A10 10 0 0 1 246 256 A10 10 0 0 1 266 256 Z M273 256 A17 17 0 0 0 239 256 A17 17 0 0 0 273 256 Z"/>
+    <!-- tail-ll: BACK: short tip emerging below the crescent's outer rim -->
+    <path id="ring-x2-tail-ll" d="M147.88 398.46 A36 240 45 0 1 113.54 364.12 A207.5 193.5 45 0 0 147.88 398.44 Z"/>
+  </g>
+  </g>
+  <!-- detail: hairline rims inset 9.0 units from every band edge, stopping short of each cut.
+       Purely decorative; drop this group for favicon / small sizes. -->
+  <g id="detail" fill="none" stroke="#6E5119" stroke-width="1.6" stroke-linecap="round" stroke-opacity="0.55">
+    <path d="M200.47 237.67 A231 27 45 0 1 237.67 200.47"/>
+    <path d="M311.53 274.33 A231 27 45 0 1 274.33 311.53"/>
+    <path d="M135 399.42 A27 231 45 0 1 112.58 377"/>
+    <path d="M195.06 280.07 A27 231 45 1 1 231.93 316.94"/>
+    <path d="M359.02 411.22 A191 177 45 0 1 100.78 152.98"/>
+    <path d="M146.84 96.84 A191 177 45 0 1 212.77 65.73"/>
+    <path d="M446.27 299.23 A191 177 45 0 1 415.16 365.16"/>
+    <path d="M142.58 209.09 A169 157.8 45 0 0 302.91 369.42"/>
+    <path d="M212.8 65.8 A169 157.8 45 0 0 166.98 110.36"/>
+    <path d="M401.64 345.02 A169 157.8 45 0 0 446.2 299.2"/>
+  </g>
+</svg>

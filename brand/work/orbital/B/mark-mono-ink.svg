@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Kubrique mark, one colour">
+  <title>Kubrique orbital mark - construction B, one colour</title>
+  <defs>
+    <ellipse id="shape-lens" cx="0" cy="0" rx="200" ry="26"/>
+    <path id="shape-crescent" d="M43.79 167.98 A168 174 0 1 1 43.79 -167.98 A162 168 0 0 0 43.79 167.98 Z"/>
+
+    <!-- ring shapes in global coordinates, used to clip the shadows -->
+    <clipPath id="g-crescent"><use href="#shape-crescent" transform="translate(265.9 256) rotate(-15)"/></clipPath>
+    <clipPath id="g-x1"><use href="#shape-lens" transform="translate(265.9 256) rotate(42)"/></clipPath>
+    <clipPath id="g-x2"><use href="#shape-lens" transform="translate(265.9 256) rotate(-42)"/></clipPath>
+    <!-- weave clips: half-planes.  The back rect overlaps the front by 0.8px. -->
+    <clipPath id="clip-crescent-front"><rect x="0" y="0" width="512" height="256"/></clipPath>
+    <clipPath id="clip-crescent-back"><rect x="0" y="255.2" width="512" height="256.8"/></clipPath>
+    <clipPath id="clip-x2-front"><rect x="-900" y="-450" width="825" height="900" transform="translate(265.9 256) rotate(-42)"/></clipPath>
+    <clipPath id="clip-x2-back"><rect x="-75.8" y="-450" width="975" height="900" transform="translate(265.9 256) rotate(-42)"/></clipPath>
+
+    <!-- weave channels: each UNDER segment is masked by "everything except the OVER ring dilated by 4.5px" -->
+    <mask id="under-crescent" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="#fff"/>
+      <use href="#shape-crescent" transform="translate(265.9 256) rotate(-15)" fill="#000" stroke="#000" stroke-width="9" stroke-linejoin="round"/>
+    </mask>
+    <mask id="under-x1" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="#fff"/>
+      <use href="#shape-lens" transform="translate(265.9 256) rotate(42)" fill="#000" stroke="#000" stroke-width="9"/>
+    </mask>
+    <mask id="under-x2" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="#fff"/>
+      <use href="#shape-lens" transform="translate(265.9 256) rotate(-42)" fill="#000" stroke="#000" stroke-width="9"/>
+    </mask>
+
+    <g id="ring-x1" transform="translate(265.9 256) rotate(42)"><use href="#shape-lens" fill="#14171F"/></g>
+    <g id="ring-x2" transform="translate(265.9 256) rotate(-42)"><use href="#shape-lens" fill="#14171F"/></g>
+    <g id="ring-crescent" transform="translate(265.9 256) rotate(-15)"><use href="#shape-crescent" fill="#14171F"/></g>
+  </defs>
+
+  <!-- ======================= weave stack, bottom to top ======================= -->
+  <!-- x2 BACK segment: centre + upper-right arm.  Under x1 at the centre (P0). -->
+  <g id="ring-x2-back" clip-path="url(#clip-x2-back)" mask="url(#under-x1)">
+    <use href="#ring-x2"/>
+  </g>
+  <!-- crescent BACK segment: lower half.  Under x2 at the lower-left crossing (P2). -->
+  <g id="ring-crescent-back" clip-path="url(#clip-crescent-back)" mask="url(#under-x2)">
+    <use href="#ring-crescent"/>
+  </g>
+  <!-- x1: single segment.  Over x2 at the centre (P0), under the crescent at upper-left (P1). -->
+  <g id="ring-x1-full" mask="url(#under-crescent)">
+    <use href="#ring-x1"/>
+  </g>
+  <!-- crescent FRONT segment: upper half.  Over x1 at the upper-left crossing (P1). -->
+  <g id="ring-crescent-front" clip-path="url(#clip-crescent-front)"><use href="#ring-crescent"/></g>
+  <!-- x2 FRONT segment: lower-left arm.  Over the crescent at the lower-left crossing (P2). -->
+  <g id="ring-x2-front" clip-path="url(#clip-x2-front)"><use href="#ring-x2"/></g>
+  <circle id="core" cx="265.9" cy="256" r="7" fill="none" stroke="#14171F" stroke-width="3"/>
+</svg>

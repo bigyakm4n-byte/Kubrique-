@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Kubrique mark: a crescent and an X made of three interlocking orbital rings">
+  <title>Kubrique orbital mark - construction B</title>
+  <!--
+    Three orbital rings: ring-crescent (face-on, tilted 15 deg, mouth up-right),
+    ring-x1 (+42 deg lens) and ring-x2 (-42 deg lens).
+    Weave: x1 over x2 at the centre; crescent over x1 at upper-left (P1 ~ 151.72,153.2);
+    x2 over crescent at lower-left (P2 ~ 158.33,352.86).
+    Segments: ring-crescent-back / -front, ring-x2-back / -front, ring-x1-full (see comments below).
+    Each ring's artwork lives once in <defs> (ids ring-crescent, ring-x1, ring-x2) and is instanced
+    with <use>; animate those three groups to turn the rings.
+  -->
+  <defs>
+    <!-- base shapes, local coordinates (centre 0,0) -->
+    <ellipse id="shape-lens" cx="0" cy="0" rx="200" ry="26"/>
+    <path id="shape-crescent" d="M43.79 167.98 A168 174 0 1 1 43.79 -167.98 A162 168 0 0 0 43.79 167.98 Z"/>
+    <clipPath id="band-crescent"><use href="#shape-crescent"/></clipPath>
+
+    <!-- glass: translucent, cool, lit from the upper edge -->
+    <linearGradient id="glass-lens" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0"    stop-color="#2A4461" stop-opacity="0.94"/>
+      <stop offset="0.16" stop-color="#7393B4" stop-opacity="0.9"/>
+      <stop offset="0.36" stop-color="#D9E6F2" stop-opacity="0.9"/>
+      <stop offset="0.55" stop-color="#93AEC8" stop-opacity="0.9"/>
+      <stop offset="0.80" stop-color="#547290" stop-opacity="0.9"/>
+      <stop offset="1"    stop-color="#243A52" stop-opacity="0.94"/>
+    </linearGradient>
+    <radialGradient id="glass-crescent" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="168" gradientTransform="scale(1 1.04)">
+      <stop offset="0.66" stop-color="#243A52" stop-opacity="0.94"/>
+      <stop offset="0.76" stop-color="#547290" stop-opacity="0.9"/>
+      <stop offset="0.86" stop-color="#93AEC8" stop-opacity="0.9"/>
+      <stop offset="0.93" stop-color="#D9E6F2" stop-opacity="0.9"/>
+      <stop offset="0.975" stop-color="#7393B4" stop-opacity="0.9"/>
+      <stop offset="1"    stop-color="#2A4461" stop-opacity="0.94"/>
+    </radialGradient>
+    <radialGradient id="glow" gradientUnits="userSpaceOnUse" cx="265.9" cy="256" r="60">
+      <stop offset="0"   stop-color="#FFF4D2" stop-opacity="0.95"/>
+      <stop offset="0.3" stop-color="#F3C86E" stop-opacity="0.45"/>
+      <stop offset="1"   stop-color="#F3C86E" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- ring shapes in global coordinates, used to clip the shadows -->
+    <clipPath id="g-crescent"><use href="#shape-crescent" transform="translate(265.9 256) rotate(-15)"/></clipPath>
+    <clipPath id="g-x1"><use href="#shape-lens" transform="translate(265.9 256) rotate(42)"/></clipPath>
+    <clipPath id="g-x2"><use href="#shape-lens" transform="translate(265.9 256) rotate(-42)"/></clipPath>
+    <!-- weave clips: half-planes.  The back rect overlaps the front by 0.8px. -->
+    <clipPath id="clip-crescent-front"><rect x="0" y="0" width="512" height="256"/></clipPath>
+    <clipPath id="clip-crescent-back"><rect x="0" y="255.2" width="512" height="256.8"/></clipPath>
+    <clipPath id="clip-x2-front"><rect x="-900" y="-450" width="825" height="900" transform="translate(265.9 256) rotate(-42)"/></clipPath>
+    <clipPath id="clip-x2-back"><rect x="-75.8" y="-450" width="975" height="900" transform="translate(265.9 256) rotate(-42)"/></clipPath>
+
+
+    <!-- ring artwork, drawn once each -->
+    <g id="ring-x1" transform="translate(265.9 256) rotate(42)">
+      <use href="#shape-lens" fill="url(#glass-lens)"/>
+      <line x1="-184" y1="0" x2="184" y2="0" stroke="#FFFFFF" stroke-opacity="0.28" stroke-width="1"/>
+      <g stroke="#A87F33" stroke-width="1" stroke-opacity="0.45" stroke-linecap="round">
+      <line x1="25" y1="-20.3" x2="25" y2="20.3"/>
+      <line x1="-25" y1="-20.3" x2="-25" y2="20.3"/>
+      <line x1="50" y1="-19.67" x2="50" y2="19.67"/>
+      <line x1="-50" y1="-19.67" x2="-50" y2="19.67"/>
+      <line x1="75" y1="-18.6" x2="75" y2="18.6"/>
+      <line x1="-75" y1="-18.6" x2="-75" y2="18.6"/>
+      <line x1="100" y1="-17.02" x2="100" y2="17.02"/>
+      <line x1="-100" y1="-17.02" x2="-100" y2="17.02"/>
+      <line x1="125" y1="-14.8" x2="125" y2="14.8"/>
+      <line x1="-125" y1="-14.8" x2="-125" y2="14.8"/>
+      <line x1="150" y1="-11.7" x2="150" y2="11.7"/>
+      <line x1="-150" y1="-11.7" x2="-150" y2="11.7"/>
+      <line x1="175" y1="-7.09" x2="175" y2="7.09"/>
+      <line x1="-175" y1="-7.09" x2="-175" y2="7.09"/>
+    </g>
+      <ellipse cx="0" cy="0" rx="193" ry="21.5" fill="none" stroke="#A87F33" stroke-width="1" stroke-opacity="0.8"/>
+      <use href="#shape-lens" fill="none" stroke="#CDA044" stroke-width="1.5"/>
+    </g>
+    <g id="ring-x2" transform="translate(265.9 256) rotate(-42)">
+      <use href="#shape-lens" fill="url(#glass-lens)"/>
+      <line x1="-184" y1="0" x2="184" y2="0" stroke="#FFFFFF" stroke-opacity="0.28" stroke-width="1"/>
+      <g stroke="#A87F33" stroke-width="1" stroke-opacity="0.45" stroke-linecap="round">
+      <line x1="25" y1="-20.3" x2="25" y2="20.3"/>
+      <line x1="-25" y1="-20.3" x2="-25" y2="20.3"/>
+      <line x1="50" y1="-19.67" x2="50" y2="19.67"/>
+      <line x1="-50" y1="-19.67" x2="-50" y2="19.67"/>
+      <line x1="75" y1="-18.6" x2="75" y2="18.6"/>
+      <line x1="-75" y1="-18.6" x2="-75" y2="18.6"/>
+      <line x1="100" y1="-17.02" x2="100" y2="17.02"/>
+      <line x1="-100" y1="-17.02" x2="-100" y2="17.02"/>
+      <line x1="125" y1="-14.8" x2="125" y2="14.8"/>
+      <line x1="-125" y1="-14.8" x2="-125" y2="14.8"/>
+      <line x1="150" y1="-11.7" x2="150" y2="11.7"/>
+      <line x1="-150" y1="-11.7" x2="-150" y2="11.7"/>
+      <line x1="175" y1="-7.09" x2="175" y2="7.09"/>
+      <line x1="-175" y1="-7.09" x2="-175" y2="7.09"/>
+    </g>
+      <ellipse cx="0" cy="0" rx="193" ry="21.5" fill="none" stroke="#A87F33" stroke-width="1" stroke-opacity="0.8"/>
+      <use href="#shape-lens" fill="none" stroke="#CDA044" stroke-width="1.5"/>
+    </g>
+    <g id="ring-crescent" transform="translate(265.9 256) rotate(-15)">
+      <use href="#shape-crescent" fill="url(#glass-crescent)"/>
+      <g stroke="#A87F33" stroke-width="1" stroke-opacity="0.45" stroke-linecap="round">
+      <line x1="-24.86" y1="156.94" x2="-26.34" y2="166.27"/>
+      <line x1="-53.47" y1="139.3" x2="-60.1" y2="156.56"/>
+      <line x1="-76.59" y1="117.94" x2="-90.77" y2="139.77"/>
+      <line x1="-94.38" y1="94.38" x2="-116.97" y2="116.97"/>
+      <line x1="-107.3" y1="69.68" x2="-137.72" y2="89.44"/>
+      <line x1="-115.86" y1="44.48" x2="-152.39" y2="58.5"/>
+      <line x1="-120.48" y1="19.08" x2="-160.64" y2="25.44"/>
+      <line x1="-121.39" y1="-6.36" x2="-162.29" y2="-8.51"/>
+      <line x1="-118.64" y1="-31.79" x2="-157.33" y2="-42.16"/>
+      <line x1="-112.1" y1="-57.12" x2="-145.85" y2="-74.31"/>
+      <line x1="-101.42" y1="-82.13" x2="-128.07" y2="-103.71"/>
+      <line x1="-86.13" y1="-106.36" x2="-104.5" y2="-129.04"/>
+      <line x1="-65.72" y1="-128.98" x2="-75.91" y2="-148.99"/>
+      <line x1="-39.84" y1="-148.7" x2="-43.5" y2="-162.35"/>
+      <line x1="-8.58" y1="-163.78" x2="-8.82" y2="-168.25"/>
+    </g>
+      <g clip-path="url(#band-crescent)" fill="none" stroke="#A87F33" stroke-width="1" stroke-opacity="0.8">
+        <ellipse cx="0" cy="0" rx="163.5" ry="169.5"/>
+        <ellipse cx="46" cy="0" rx="166.5" ry="172.5"/>
+      </g>
+      <use href="#shape-crescent" fill="none" stroke="#CDA044" stroke-width="1.5" stroke-linejoin="round"/>
+    </g>
+  </defs>
+
+  <circle id="core-glow" cx="265.9" cy="256" r="60" fill="url(#glow)"/>
+
+  <!-- ======================= weave stack, bottom to top ======================= -->
+  <!-- x2 BACK segment: centre + upper-right arm.  Under x1 at the centre (P0). -->
+  <g id="ring-x2-back" clip-path="url(#clip-x2-back)">
+    <use href="#ring-x2"/>
+    <g clip-path="url(#g-x2)" fill="none" stroke="#07101F" stroke-linejoin="round"><use href="#shape-lens" transform="translate(265.9 256) rotate(42)" stroke-width="20" stroke-opacity="0.22"/><use href="#shape-lens" transform="translate(265.9 256) rotate(42)" stroke-width="9" stroke-opacity="0.40"/></g>
+  </g>
+  <!-- crescent BACK segment: lower half.  Under x2 at the lower-left crossing (P2). -->
+  <g id="ring-crescent-back" clip-path="url(#clip-crescent-back)">
+    <use href="#ring-crescent"/>
+    <g clip-path="url(#g-crescent)" fill="none" stroke="#07101F" stroke-linejoin="round"><use href="#shape-lens" transform="translate(265.9 256) rotate(-42)" stroke-width="20" stroke-opacity="0.22"/><use href="#shape-lens" transform="translate(265.9 256) rotate(-42)" stroke-width="9" stroke-opacity="0.40"/></g>
+  </g>
+  <!-- x1: single segment.  Over x2 at the centre (P0), under the crescent at upper-left (P1). -->
+  <g id="ring-x1-full">
+    <use href="#ring-x1"/>
+    <g clip-path="url(#g-x1)" fill="none" stroke="#07101F" stroke-linejoin="round"><use href="#shape-crescent" transform="translate(265.9 256) rotate(-15)" stroke-width="20" stroke-opacity="0.22"/><use href="#shape-crescent" transform="translate(265.9 256) rotate(-15)" stroke-width="9" stroke-opacity="0.40"/></g>
+  </g>
+  <!-- crescent FRONT segment: upper half.  Over x1 at the upper-left crossing (P1). -->
+  <g id="ring-crescent-front" clip-path="url(#clip-crescent-front)"><use href="#ring-crescent"/></g>
+  <!-- x2 FRONT segment: lower-left arm.  Over the crescent at the lower-left crossing (P2). -->
+  <g id="ring-x2-front" clip-path="url(#clip-x2-front)"><use href="#ring-x2"/></g>
+  <!-- luminous core: the bulb / star / engine -->
+  <g id="core">
+    <circle cx="265.9" cy="256" r="7" fill="#FFF9E8" stroke="#CDA044" stroke-width="1.5"/>
+    <circle cx="264.4" cy="254.5" r="2.2" fill="#FFFFFF"/>
+  </g>
+<g id="seam-facets" stroke="#A87F33" stroke-width="1.2" stroke-opacity="0.75" stroke-linecap="round">
+    <line x1="143.07" y1="256" x2="103.02" y2="256"/>
+    <line x1="197.72" y1="292.36" x2="222.61" y2="320.01"/>
+  </g>
+</svg>

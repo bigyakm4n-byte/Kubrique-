@@ -1,0 +1,14 @@
+quads=288 segments=10 forced=0 size=38975B
+collisions: none
+per ring: {'ring-x1': 5, 'ring-crescent': 3, 'ring-x2': 2}
+  ring-x1        back  n=47 arc  210..  26  depth -215.4..  88.9  outer=7/47
+  ring-crescent  back  n=48 arc  128.. 307  depth -131.0.. 101.3  outer=14/48
+  ring-x2        back  n=82 arc  116..  64  depth -124.6.. 110.0  outer=34/82
+  ring-x1        back  n=15 arc  154.. 210  depth -101.6..  88.9  outer=7/15
+  ring-crescent  front n=47 arc  307.. 124  depth -101.3.. 131.0  outer=33/47
+  CORE
+  ring-x1        front n= 1 arc   26..  30  depth  101.6.. 101.6  outer=1/1
+  ring-x1        front n=15 arc   98.. 154  depth  101.6.. 212.6  outer=15/15
+  ring-crescent  front n= 1 arc  124.. 128  depth  106.5.. 106.5  outer=1/1
+  ring-x2        front n=14 arc   64.. 116  depth  113.6.. 124.6  outer=14/14
+  ring-x1        front n=18 arc   30..  98  depth  113.8.. 215.4  outer=18/18

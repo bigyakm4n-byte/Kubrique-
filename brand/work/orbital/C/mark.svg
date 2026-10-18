@@ -2,49 +2,50 @@
   <title>Kubrique mark - construction C, flat knot emblem</title>
   <desc>Crescent + X built from three interlocking orbital rings, drawn as a strictly two-tone
 emblem (one brass fill, transparent cuts). The crescent is a hoop seen nearly face-on and tilted
-(lune between two ellipses); the X is two hoops seen nearly edge-on (thin ellipses). Every crossing
+(lune between two ellipses); the X is two hoops seen nearly edge-on (blunt lenses). Every crossing
 is an alternating over/under: X1 over crescent (both limbs), X2 over X1 (hub), crescent over X2
-(thick base). The under-ring is cut by the over-ring dilated by 7.5 units, so each ring is a set
-of explicit front/back pieces; no masks, no clipPaths, no gradients. Hide #detail below ~64px.</desc>
+(thick base). The under-ring is cut by the over-ring dilated by 8.5 units, so each ring is a set
+of explicit front/back pieces; no masks, no clipPaths, no gradients. Hide #detail below ~64px.
+Ink bbox: 71.83,52.01 to 459.99,440.17.</desc>
   <g id="mark" fill="#C9A24E" fill-rule="evenodd">
-  <!-- ring-crescent: hoop seen nearly face-on, tilted. Outer rim ellipse (200x186), inner rim ellipse (160x148.8) offset toward the opening. Pieces split by the X1 cut: body (centre) + two horns. -->
+  <!-- ring-crescent: hoop seen nearly face-on, tilted. Outer rim ellipse 200x188, inner rim ellipse 152x142.88 offset toward the opening. Split by the X1 cut into body + two horns. -->
   <g id="ring-crescent">
     <!-- body: FRONT over X2 at the thick base; BACK under X1 (cut on both limbs) -->
-    <path id="ring-crescent-body" d="M374.81 412.78 A200 186 45 0 1 99.22 137.19 A247.5 43.5 45 0 0 151.48 206.75 A160 148.8 45 0 0 305.45 360.59 A247.5 43.5 45 0 0 374.81 412.74 Z"/>
+    <path id="ring-crescent-body" d="M363.59 419.53 A200 188 45 0 1 92.47 148.41 C102.26 162.28 113.04 175.43 124.14 188.25 C140.33 206.96 157.33 224.97 174.57 242.71 A152 142.88 45 0 0 269.59 337.62 C287.03 354.67 305.04 371.67 323.75 387.86 C336.57 398.96 349.72 409.74 363.6 419.49 Z"/>
     <!-- horn-right: BACK: horn beyond the X1 cut, tapers to nothing (points right) -->
-    <path id="ring-crescent-horn-right" d="M458.62 238.68 A200 186 45 0 1 415.38 378.99 A247.5 43.5 45 0 0 389.72 341.8 A160 148.8 45 0 0 458.55 238.68 Z"/>
+    <path id="ring-crescent-horn-right" d="M458.25 232.05 A200 188 45 0 1 423.32 369.15 C418.97 362.67 414.37 356.39 409.62 350.23 C403.91 342.82 397.98 335.59 391.91 328.47 A152 142.88 45 0 0 458.17 232.05 Z"/>
     <!-- horn-upper: BACK: horn beyond the X1 cut, tapers to nothing (points up) -->
-    <path id="ring-crescent-horn-upper" d="M133.01 96.62 A200 186 45 0 1 273.32 53.38 A160 148.8 45 0 0 170.21 122.28 A247.5 43.5 45 0 0 133.01 96.65 Z"/>
+    <path id="ring-crescent-horn-upper" d="M142.85 88.68 A200 188 45 0 1 279.95 53.75 A152 142.88 45 0 0 183.55 120.08 C176.41 114.02 169.18 108.09 161.77 102.38 C155.61 97.63 149.33 93.03 142.85 88.71 Z"/>
   </g>
-  <!-- ring-x1: hoop seen nearly edge-on, upper-left to lower-right (ellipse 240x36 rotated 45). Over the crescent at both limbs, under X2 at the hub (hence the two arm pieces). -->
+  <!-- ring-x1: hoop seen nearly edge-on, upper-left to lower-right (blunt lens 480x80, superellipse n=3, rotated 45). Over the crescent at both limbs, under X2 at the hub -> two arm pieces. -->
   <g id="ring-x1">
-    <!-- arm-lr: FRONT over crescent (lower-right limb); ends at the cut where X2 passes over -->
-    <path id="ring-x1-arm-lr" d="M311.49 261.4 A240 36 45 0 1 261.4 311.49 A43.5 247.5 45 0 0 311.48 261.4 Z"/>
-    <!-- arm-ul: FRONT over crescent (upper-left limb); ends at the cut where X2 passes over -->
-    <path id="ring-x1-arm-ul" d="M200.51 250.6 A240 36 45 0 1 250.6 200.51 A43.5 247.5 45 0 0 200.52 250.6 Z"/>
+    <!-- arm-lr: FRONT over the crescent's right limb; ends at the cut where X2 passes over at the hub -->
+    <path id="ring-x1-arm-lr" d="M318.45 262.04 C336.45 280.29 354.28 298.71 371.47 317.72 C382.97 330.44 394.22 343.41 404.72 356.96 C412.07 366.43 419.17 376.21 425.03 386.69 C427.15 390.48 429.11 394.38 430.65 398.45 C431.86 401.62 432.84 404.92 433.19 408.31 C433.48 411.09 433.3 413.93 432.36 416.57 C431.06 420.22 428.4 423.02 425.71 425.71 C425.71 425.71 425.71 425.71 425.71 425.71 C423.02 428.4 420.22 431.06 416.57 432.36 C413.93 433.3 411.09 433.48 408.31 433.19 C404.92 432.84 401.62 431.86 398.45 430.65 C394.38 429.11 390.48 427.15 386.69 425.03 C376.21 419.17 366.43 412.07 356.96 404.72 C343.41 394.22 330.44 382.97 317.72 371.47 C298.71 354.28 280.29 336.45 262.04 318.45 C271.49 309.1 280.89 299.7 290.29 290.29 C299.7 280.89 309.1 271.49 318.45 262.04 Z"/>
+    <!-- arm-ul: FRONT over the crescent's upper limb; ends at the cut where X2 passes over at the hub -->
+    <path id="ring-x1-arm-ul" d="M193.55 249.96 C175.55 231.71 157.72 213.29 140.53 194.28 C129.03 181.56 117.78 168.59 107.28 155.04 C99.93 145.57 92.83 135.79 86.97 125.31 C84.85 121.52 82.89 117.62 81.35 113.55 C80.14 110.38 79.16 107.08 78.81 103.69 C78.52 100.91 78.7 98.07 79.64 95.43 C80.94 91.78 83.6 88.98 86.29 86.29 C86.29 86.29 86.29 86.29 86.29 86.29 C88.98 83.6 91.78 80.94 95.43 79.64 C98.07 78.7 100.91 78.52 103.69 78.81 C107.08 79.16 110.38 80.14 113.55 81.35 C117.62 82.89 121.52 84.85 125.31 86.97 C135.79 92.83 145.57 99.93 155.04 107.28 C168.59 117.78 181.56 129.03 194.28 140.53 C213.29 157.72 231.71 175.55 249.96 193.55 C240.51 202.9 231.11 212.3 221.71 221.71 C221.71 221.71 221.71 221.71 221.71 221.71 C212.3 231.11 202.9 240.51 193.55 249.96 Z"/>
   </g>
-  <!-- ring-x2: hoop seen nearly edge-on, lower-left to upper-right (ellipse 36x240 rotated 135). Over X1 at the hub, under the crescent at the thick base (hence arm + tail pieces). The hub piece carries the transparent halo (hole) and the core dot is a separate piece. -->
+  <!-- ring-x2: hoop seen nearly edge-on, lower-left to upper-right (same lens rotated 135). Over X1 at the hub, under the crescent at the thick base -> arm + tail pieces; the arm carries the transparent halo, the core dot is its own piece. -->
   <g id="ring-x2">
-    <!-- arm-ur: FRONT over X1 at the hub; BACK under the crescent (cut at its inner rim); exits through the horns -->
-    <path id="ring-x2-arm-ur" d="M183.74 279.41 A36 240 45 1 1 232.59 328.26 A152.5 141.3 45 0 1 183.74 279.38 Z"/>
-    <!-- core: luminous core dot, sits on the X2 band at the hub -->
-    <path id="ring-x2-core" d="M266 256 A10 10 0 0 1 246 256 A10 10 0 0 1 266 256 Z M273 256 A17 17 0 0 0 239 256 A17 17 0 0 0 273 256 Z"/>
-    <!-- tail-ll: BACK: short tip emerging below the crescent's outer rim -->
-    <path id="ring-x2-tail-ll" d="M147.88 398.46 A36 240 45 0 1 113.54 364.12 A207.5 193.5 45 0 0 147.88 398.44 Z"/>
+    <!-- arm-ur: FRONT over X1 at the hub; BACK under the crescent (cut along its inner rim); exits between the horns -->
+    <path id="ring-x2-arm-ur" d="M193.07 262.52 C204.57 250.87 216.14 239.29 227.72 227.72 C247.59 207.84 267.46 187.96 287.75 168.51 C303.38 153.53 319.24 138.78 335.68 124.7 C347.14 114.89 358.88 105.33 371.27 96.72 C375.91 93.5 380.66 90.41 385.57 87.6 C389.49 85.36 393.53 83.28 397.74 81.62 C403.51 79.34 410.29 77.48 416.4 79.58 C420.13 80.86 422.97 83.56 425.71 86.29 C428.44 89.03 431.14 91.87 432.42 95.6 C434.52 101.71 432.66 108.49 430.38 114.26 C428.72 118.47 426.64 122.51 424.4 126.43 C421.59 131.34 418.5 136.09 415.28 140.73 C406.67 153.12 397.11 164.86 387.3 176.32 C373.22 192.76 358.47 208.62 343.49 224.25 C324.04 244.54 304.16 264.41 284.28 284.28 C272.71 295.86 261.13 307.43 249.48 318.93 A143.5 134.38 45 0 1 193.08 262.49 Z"/>
+    <!-- core: luminous core dot (own piece, sits in the halo hole of arm-ur) -->
+    <path id="ring-x2-core" d="M266 256 A10 10 0 0 1 246 256 A10 10 0 0 1 266 256 Z M273.5 256 A17.5 17.5 0 0 0 238.5 256 A17.5 17.5 0 0 0 273.5 256 Z"/>
+    <!-- tail-ll: BACK: short blunt tip emerging below the crescent's outer rim -->
+    <path id="ring-x2-tail-ll" d="M152.29 406.84 C143.26 413.72 133.93 420.37 123.94 425.79 C120.3 427.76 116.57 429.57 112.68 430.98 C109.63 432.08 106.45 432.96 103.21 433.24 C100.51 433.46 97.77 433.23 95.22 432.28 C91.66 430.96 88.93 428.34 86.29 425.71 C86.29 425.71 86.29 425.71 86.29 425.71 C83.66 423.07 81.04 420.34 79.72 416.78 C78.77 414.23 78.54 411.49 78.76 408.79 C79.04 405.55 79.92 402.37 81.02 399.32 C82.43 395.43 84.24 391.7 86.21 388.06 C91.63 378.07 98.28 368.74 105.16 359.71 A208.5 196.5 45 0 0 152.29 406.81 Z"/>
   </g>
   </g>
   <!-- detail: hairline rims inset 9.0 units from every band edge, stopping short of each cut.
-       Purely decorative; drop this group for favicon / small sizes. -->
-  <g id="detail" fill="none" stroke="#6E5119" stroke-width="1.6" stroke-linecap="round" stroke-opacity="0.55">
-    <path d="M200.47 237.67 A231 27 45 0 1 237.67 200.47"/>
-    <path d="M311.53 274.33 A231 27 45 0 1 274.33 311.53"/>
-    <path d="M135 399.42 A27 231 45 0 1 112.58 377"/>
-    <path d="M195.06 280.07 A27 231 45 1 1 231.93 316.94"/>
-    <path d="M359.02 411.22 A191 177 45 0 1 100.78 152.98"/>
-    <path d="M146.84 96.84 A191 177 45 0 1 212.77 65.73"/>
-    <path d="M446.27 299.23 A191 177 45 0 1 415.16 365.16"/>
-    <path d="M142.58 209.09 A169 157.8 45 0 0 302.91 369.42"/>
-    <path d="M212.8 65.8 A169 157.8 45 0 0 166.98 110.36"/>
-    <path d="M401.64 345.02 A169 157.8 45 0 0 446.2 299.2"/>
+       Decorative only; drop this group for favicon / small sizes. -->
+  <g id="detail" fill="none" stroke="#6E5119" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.5">
+    <path d="M193.56 237.17 C177.58 220.92 161.74 204.52 146.36 187.7 C135.79 176.14 125.41 164.38 115.57 152.18 C108.7 143.65 102 134.89 96.24 125.56 C94.18 122.22 92.24 118.79 90.61 115.21 C89.37 112.49 88.29 109.66 87.72 106.71 C87.28 104.45 87.16 102.07 87.77 99.82 C88.57 96.91 90.58 94.74 92.66 92.66 C94.74 90.58 96.91 88.57 99.82 87.77 C102.07 87.16 104.45 87.28 106.71 87.72 C109.66 88.29 112.49 89.37 115.21 90.61 C118.79 92.24 122.22 94.18 125.56 96.24 C134.89 102 143.65 108.7 152.18 115.57 C164.38 125.41 176.14 135.79 187.7 146.36 C204.52 161.74 220.92 177.58 237.17 193.56"/>
+    <path d="M318.44 274.83 C334.42 291.08 350.26 307.48 365.64 324.3 C376.21 335.86 386.59 347.62 396.43 359.82 C403.3 368.35 410 377.11 415.76 386.44 C417.82 389.78 419.76 393.21 421.39 396.79 C422.63 399.51 423.71 402.34 424.28 405.29 C424.72 407.55 424.84 409.93 424.23 412.18 C423.43 415.09 421.42 417.26 419.34 419.34 C419.34 419.34 419.34 419.34 419.34 419.34 C417.26 421.42 415.09 423.43 412.18 424.23 C409.93 424.84 407.55 424.72 405.29 424.28 C402.34 423.71 399.51 422.63 396.79 421.39 C393.21 419.76 389.78 417.82 386.44 415.76 C377.11 410 368.35 403.3 359.82 396.43 C347.62 386.59 335.86 376.21 324.3 365.64 C307.48 350.26 291.08 334.42 274.83 318.44"/>
+    <path d="M138.11 407.25 C134.09 410.19 129.98 413.02 125.74 415.65 C122.38 417.73 118.93 419.69 115.33 421.34 C112.59 422.59 109.74 423.69 106.78 424.27 C104.5 424.72 102.11 424.85 99.85 424.24 C96.93 423.45 94.75 421.43 92.66 419.34 C90.57 417.25 88.55 415.07 87.76 412.15 C87.15 409.89 87.28 407.5 87.73 405.22 C88.31 402.26 89.41 399.41 90.66 396.67 C92.31 393.07 94.27 389.62 96.35 386.26 C98.98 382.02 101.81 377.91 104.75 373.89"/>
+    <path d="M204.4 263.85 C214.26 253.9 224.17 243.99 234.08 234.08 C253.93 214.23 273.78 194.36 294 174.88 C308.65 160.76 323.47 146.82 338.75 133.39 C349.42 124.01 360.3 114.82 371.72 106.34 C375.98 103.18 380.31 100.12 384.79 97.28 C388.33 95.03 391.96 92.9 395.76 91.09 C398.63 89.72 401.62 88.51 404.73 87.83 C407.09 87.32 409.58 87.12 411.95 87.71 C414.96 88.47 417.2 90.52 419.34 92.66 C421.48 94.8 423.53 97.04 424.29 100.05 C424.88 102.42 424.68 104.91 424.17 107.27 C423.49 110.38 422.28 113.37 420.91 116.24 C419.1 120.04 416.97 123.67 414.72 127.21 C411.88 131.69 408.82 136.02 405.66 140.28 C397.18 151.7 387.99 162.58 378.61 173.25 C365.18 188.53 351.24 203.35 337.12 218 C317.64 238.22 297.77 258.07 277.92 277.92 C268.01 287.83 258.1 297.74 248.15 307.6"/>
+    <path d="M346.46 417.62 A191 179 45 0 1 94.38 165.54"/>
+    <path d="M158.14 88.94 A191 179 45 0 1 228.23 62.82"/>
+    <path d="M449.18 283.77 A191 179 45 0 1 423.06 353.86"/>
+    <path d="M166.59 247.27 A161 151.88 45 0 0 264.73 345.41"/>
+    <path d="M228.26 62.89 A161 151.88 45 0 0 181.25 106.79"/>
+    <path d="M405.21 330.75 A161 151.88 45 0 0 449.11 283.74"/>
   </g>
 </svg>

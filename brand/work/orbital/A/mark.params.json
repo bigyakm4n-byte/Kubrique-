@@ -3,10 +3,11 @@
  "scale": 1.0,
  "camera_D": null,
  "light": [
-  -0.45,
-  0.7,
-  0.6
+  -0.38,
+  0.56,
+  0.74
  ],
+ "inner_fill": "#5a3f16",
  "rim_w": 2.2,
  "core_r": 54,
  "core_dot": 7,

@@ -1,4 +1,4 @@
-quads=288 segments=10 forced=0 size=38975B
+quads=288 segments=10 forced=0 size=36672B
 collisions: none
 per ring: {'ring-x1': 5, 'ring-crescent': 3, 'ring-x2': 2}
   ring-x1        back  n=47 arc  210..  26  depth -215.4..  88.9  outer=7/47

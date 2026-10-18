@@ -133,7 +133,7 @@ def clamp01(x): return 0.0 if x < 0 else (1.0 if x > 1 else x)
 def hexcol(rgb):
     return "#%02x%02x%02x" % tuple(int(round(clamp01(c)*255)) for c in rgb)
 
-def shade(normal, tocam, L, mat, qsteps=(9, 5)):
+def shade(normal, tocam, L, mat, qsteps=(13, 6)):
     """Lambert + Blinn-Phong on a quantised grid so neighbouring quads share colours."""
     n = normal if dot(normal, tocam) > 0 else mul(normal, -1.0)
     diff = clamp01(dot(n, L))
@@ -155,9 +155,9 @@ def shade(normal, tocam, L, mat, qsteps=(9, 5)):
 # Palette: gold/brass metal for rims, warm glass band.  Chosen to sit mid-value so
 # it reads on both #0d0e13 and #f5f1e8.
 MATERIALS = {
-    "glass_outer": dict(base=(0.86, 0.66, 0.30), hi=(1.00, 0.96, 0.80), amb=0.42, kd=0.58, ks=0.55, kg=0.25, p=18, opacity=0.92),
+    "glass_outer": dict(base=(0.84, 0.64, 0.28), hi=(1.00, 0.96, 0.80), amb=0.52, kd=0.50, ks=0.50, kg=0.22, p=18, opacity=0.93),
     "glass_inner": dict(base=(0.40, 0.27, 0.10), hi=(0.80, 0.66, 0.40), amb=0.50, kd=0.35, ks=0.15, kg=0.05, p=12, opacity=0.16),
-    "rim_outer":   dict(base=(0.62, 0.44, 0.15), hi=(1.00, 0.97, 0.85), amb=0.40, kd=0.55, ks=0.85, kg=0.20, p=26, opacity=1.0),
+    "rim_outer":   dict(base=(0.60, 0.42, 0.14), hi=(1.00, 0.97, 0.85), amb=0.45, kd=0.50, ks=0.85, kg=0.20, p=26, opacity=1.0),
     "rim_inner":   dict(base=(0.55, 0.40, 0.16), hi=(0.95, 0.85, 0.55), amb=0.45, kd=0.45, ks=0.45, kg=0.10, p=16, opacity=0.45, wmul=0.55),
 }
 
@@ -271,15 +271,26 @@ def emit_segment_group(gid, quads, rimw, mono=None):
             if run[0].outer:
                 out.append('   <path d="%s"/>' % path_for_run(run))
     else:
-        # band fills: class go (glass outer) / gi (glass inner); stroke = fill hides AA seams
-        for run in runs_by(quads, lambda q: (q.fill, q.outer)):
-            out.append('   <path class="%s" fill="%s" stroke="%s" d="%s"/>' % ("go" if run[0].outer else "gi", run[0].fill, run[0].fill, path_for_run(run)))
-        # brass rims: class ro / ri
-        for edge in ("A", "B"):
-            key = (lambda q: (q.rimA, q.outer)) if edge == "A" else (lambda q: (q.rimB, q.outer))
-            for run in runs_by(quads, key):
-                col = run[0].rimA if edge == "A" else run[0].rimB
-                out.append('   <path class="%s" stroke="%s" d="%s"/>' % ("ro" if run[0].outer else "ri", col, polyline_for_run(run, edge)))
+        # Fills are opaque inside a sub-group; translucency comes from the group's opacity so the
+        # same-colour hairline stroke (which hides anti-aliasing seams) never doubles up.
+        for cls, want in (("gi", False), ("go", True)):
+            runs = [r for r in runs_by(quads, lambda q: (q.fill, q.outer)) if r[0].outer == want]
+            if not runs: continue
+            out.append('   <g class="%s">' % cls)
+            for run in runs:
+                out.append('    <path fill="%s" stroke="%s" d="%s"/>' % (run[0].fill, run[0].fill, path_for_run(run)))
+            out.append('   </g>')
+        # brass rims along both band edges (A: s=+w/2, B: s=-w/2)
+        for cls, want in (("ri", False), ("ro", True)):
+            lines = []
+            for edge in ("A", "B"):
+                key = (lambda q: (q.rimA, q.outer)) if edge == "A" else (lambda q: (q.rimB, q.outer))
+                for run in runs_by(quads, key):
+                    if run[0].outer != want: continue
+                    col = run[0].rimA if edge == "A" else run[0].rimB
+                    lines.append('    <path stroke="%s" d="%s"/>' % (col, polyline_for_run(run, edge)))
+            if lines:
+                out.append('   <g class="%s">' % cls); out.extend(lines); out.append('   </g>')
     out.append('  </g>')
     return "\n".join(out), side
 
@@ -321,7 +332,7 @@ def build(P):
     for r in rings:
         qs = build_quads(r, cam)
         for q in qs:
-            q.fill = shade(q.normal, q.tocam, L, MATERIALS["glass_outer" if q.outer else "glass_inner"])
+            q.fill = shade(q.normal, q.tocam, L, MATERIALS["glass_outer"]) if q.outer else P["inner_fill"]
             rm = MATERIALS["rim_outer" if q.outer else "rim_inner"]
             # rims: edge A (s=+h) and edge B (s=-h) get slightly different normals (tilted by the axis)
             nA = norm(add(q.normal, mul(r.n, 0.55))); nB = norm(sub(q.normal, mul(r.n, 0.55)))
@@ -363,10 +374,9 @@ def svg_text(P, cam, rings, items, segments, mono=None):
         go, gi, ro, ri = MATERIALS["glass_outer"], MATERIALS["glass_inner"], MATERIALS["rim_outer"], MATERIALS["rim_inner"]
         head += [' <style>',
                  '  /* go/gi: glass band, outside/inside wall.  ro/ri: brass rim, outside/inside wall. */',
-                 '  .go{fill-opacity:%.2f;stroke-width:.6;stroke-opacity:%.2f}' % (go["opacity"], go["opacity"]),
-                 '  .gi{fill-opacity:%.2f;stroke-width:.6;stroke-opacity:%.2f}' % (gi["opacity"], gi["opacity"]),
-                 '  .ro{fill:none;stroke-width:%s;stroke-opacity:%.2f;stroke-linecap:round;stroke-linejoin:round}' % (f2(P["rim_w"]), ro["opacity"]),
-                 '  .ri{fill:none;stroke-width:%s;stroke-opacity:%.2f;stroke-linecap:round;stroke-linejoin:round}' % (f2(P["rim_w"]*ri.get("wmul", 1.0)), ri["opacity"]),
+                 '  .go{opacity:%.2f}.gi{opacity:%.2f}.go path,.gi path{stroke-width:.7;stroke-linejoin:round}' % (go["opacity"], gi["opacity"]),
+                 '  .ro{opacity:%.2f}.ri{opacity:%.2f}.ro path,.ri path{fill:none;stroke-linecap:round;stroke-linejoin:round}' % (ro["opacity"], ri["opacity"]),
+                 '  .ro path{stroke-width:%s}.ri path{stroke-width:%s}' % (f2(P["rim_w"]), f2(P["rim_w"]*ri.get("wmul", 1.0))),
                  ' </style>',
                  ' <defs>',
                  '  <radialGradient id="core-glow" cx="0.5" cy="0.5" r="0.5">',
@@ -386,17 +396,21 @@ def svg_text(P, cam, rings, items, segments, mono=None):
     for gid in order:
         if gid == "CORE":
             if mono is None:
-                body.append('  <g id="core"><circle cx="256" cy="256" r="%s" fill="url(#core-glow)"/><circle cx="256" cy="256" r="%s" fill="#fffaf0"/></g>' % (f2(P["core_r"]), f2(P["core_dot"])))
+                body.append('  <g id="core"><!-- luminous core, drawn at depth 0: behind the front arcs, in front of the back arcs -->')
+                body.append('   <circle cx="256" cy="256" r="%s" fill="url(#core-glow)"/><circle cx="256" cy="256" r="%s" fill="#fffaf0"/></g>' % (f2(P["core_r"]), f2(P["core_dot"])))
             else:
                 body.append('  <g id="core"><circle cx="256" cy="256" r="%s"/></g>' % f2(P["core_dot"]*1.6))
         else:
             body.append('  <use xlink:href="#%s" href="#%s"/>' % (gid, gid))
+    if mono is None:
+        body.append('  <g id="core-shine"><!-- the core seen through the glass of the front arcs -->')
+        body.append('   <circle cx="256" cy="256" r="%s" fill="url(#core-glow)" opacity="0.55"/><circle cx="256" cy="256" r="%s" fill="#fff6dc" opacity="0.9"/></g>' % (f2(P["core_r"]*0.45), f2(P["core_dot"]*0.6)))
     body.append(' </g>')
     body.append('</svg>')
     return "\n".join(head + body) + "\n", stats
 
 DEFAULT = {
-    "N": 96, "scale": 1.0, "camera_D": None, "light": [-0.45, 0.70, 0.60],
+    "N": 96, "scale": 1.0, "camera_D": None, "light": [-0.38, 0.56, 0.74], "inner_fill": "#5a3f16",
     "rim_w": 2.2, "core_r": 54, "core_dot": 7,
     "crescent": {"R": 196, "w": 92, "theta": 42, "phi": 0},
     "x1": {"R": 216, "w": 38, "theta": 86.5, "phi": 130},

@@ -200,7 +200,7 @@ class Ring:
         L = lambda x, y: S(self.TL(x, y))
         d.append(f"M{L(-a2, 0)}")
         for h, pts in ((h2, ((0, h2), (a2, 0))), (h1, ((0, h1), (-a2, 0)))):
-            if abs(h) < 0.05:
+            if abs(h) < 2.0:      # (near-)flat lens edge: a line, not a degenerate arc
                 for x, y in pts:
                     d.append(f"L{L(x, y)}")
                 continue

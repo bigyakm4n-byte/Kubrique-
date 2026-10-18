@@ -59,3 +59,10 @@ Client direction: go back to the first reference; flip the crescent the conventi
 | G | black crescent, teal rings | 82fd1fb8-3254-4778-8702-5d098f99986c | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194918_82fd1fb8-3254-4778-8702-5d098f99986c.png) | crescent not flipped |
 
 The vector finishing spec now matches F: crescent body left, horns right; hero in one colour with small even gaps; colour variant navy and gold; one cap-height of space before the wordmark.
+
+Mono versions of F (all black, same geometry):
+
+| Variant | Job | Result |
+|---|---|---|
+| H | 2201ba2b-ac8d-45bd-93cc-0b883774a5fe | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_195043_2201ba2b-ac8d-45bd-93cc-0b883774a5fe.png) |
+| I | 93f90f8f-62c7-494b-bf1d-9588ee3e9ba0 | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_195043_93f90f8f-62c7-494b-bf1d-9588ee3e9ba0.png) |

@@ -28,6 +28,14 @@ def norm(a):
     return (a[0]/l, a[1]/l, a[2]/l)
 def rad(d): return d * math.pi / 180.0
 
+def rot_scene(v, yaw_deg, pitch_deg):
+    """Rotate a vector about y (yaw) then about x (pitch): a camera orbit for animation frames."""
+    y, p = rad(yaw_deg), rad(pitch_deg)
+    x0, y0, z0 = v
+    x1, z1 = x0*math.cos(y) + z0*math.sin(y), -x0*math.sin(y) + z0*math.cos(y)
+    y2, z2 = y0*math.cos(p) - z1*math.sin(p), y0*math.sin(p) + z1*math.cos(p)
+    return (x1, y2, z2)
+
 def axis_from_tilt(theta_deg, phi_deg):
     """Ring axis: theta = tilt away from the view axis (0 = face-on, 90 = edge-on),
     phi = azimuth (deg, counter-clockwise from +x, y up) of the tilt direction."""
@@ -133,7 +141,7 @@ def clamp01(x): return 0.0 if x < 0 else (1.0 if x > 1 else x)
 def hexcol(rgb):
     return "#%02x%02x%02x" % tuple(int(round(clamp01(c)*255)) for c in rgb)
 
-def shade(normal, tocam, L, mat, qsteps=(13, 6)):
+def shade(normal, tocam, L, mat, qsteps=(22, 8)):
     """Lambert + Blinn-Phong on a quantised grid so neighbouring quads share colours."""
     n = normal if dot(normal, tocam) > 0 else mul(normal, -1.0)
     diff = clamp01(dot(n, L))
@@ -155,7 +163,7 @@ def shade(normal, tocam, L, mat, qsteps=(13, 6)):
 # Palette: gold/brass metal for rims, warm glass band.  Chosen to sit mid-value so
 # it reads on both #0d0e13 and #f5f1e8.
 MATERIALS = {
-    "glass_outer": dict(base=(0.84, 0.64, 0.28), hi=(1.00, 0.96, 0.80), amb=0.52, kd=0.50, ks=0.50, kg=0.22, p=18, opacity=0.93),
+    "glass_outer": dict(base=(0.84, 0.64, 0.28), hi=(1.00, 0.96, 0.80), amb=0.60, kd=0.44, ks=0.50, kg=0.22, p=18, opacity=0.96),
     "glass_inner": dict(base=(0.40, 0.27, 0.10), hi=(0.80, 0.66, 0.40), amb=0.50, kd=0.35, ks=0.15, kg=0.05, p=12, opacity=0.16),
     "rim_outer":   dict(base=(0.60, 0.42, 0.14), hi=(1.00, 0.97, 0.85), amb=0.45, kd=0.50, ks=0.85, kg=0.20, p=26, opacity=1.0),
     "rim_inner":   dict(base=(0.55, 0.40, 0.16), hi=(0.95, 0.85, 0.55), amb=0.45, kd=0.45, ks=0.45, kg=0.10, p=16, opacity=0.45, wmul=0.55),
@@ -321,12 +329,12 @@ def collisions(rings, samples=720):
 def build(P):
     cam = Camera(D=P["camera_D"], cx=256.0, cy=256.0, scale=P["scale"])
     L = norm(tuple(P["light"]))
-    rings = [
-        Ring("ring-crescent", P["crescent"]["R"], P["crescent"]["w"],
-             axis_from_tilt(P["crescent"]["theta"], P["crescent"]["phi"]), P["N"], P["crescent"].get("rot", 0.0), "crescent", P["crescent"].get("Rz")),
-        Ring("ring-x1", P["x1"]["R"], P["x1"]["w"], axis_from_tilt(P["x1"]["theta"], P["x1"]["phi"]), P["N"], P["x1"].get("rot", 0.0), "x1", P["x1"].get("Rz")),
-        Ring("ring-x2", P["x2"]["R"], P["x2"]["w"], axis_from_tilt(P["x2"]["theta"], P["x2"]["phi"]), P["N"], P["x2"].get("rot", 0.0), "x2", P["x2"].get("Rz")),
-    ]
+    yaw, pitch = P.get("yaw", 0.0), P.get("pitch", 0.0)
+    def mk(rid, key, label):
+        q = P[key]
+        axis = rot_scene(axis_from_tilt(q["theta"], q["phi"]), yaw, pitch)
+        return Ring(rid, q["R"], q["w"], axis, P["N"], q.get("rot", 0.0), label, q.get("Rz"))
+    rings = [mk("ring-crescent", "crescent", "crescent"), mk("ring-x1", "x1", "x1"), mk("ring-x2", "x2", "x2")]
     P["_collisions"] = collisions(rings)
     items = []
     for r in rings:
@@ -414,7 +422,7 @@ DEFAULT = {
     "rim_w": 2.2, "core_r": 54, "core_dot": 7,
     "crescent": {"R": 196, "w": 92, "theta": 42, "phi": 0},
     "x1": {"R": 216, "w": 38, "theta": 86.5, "phi": 130},
-    "x2": {"R": 190, "Rz": 125, "w": 38, "theta": 86.5, "phi": 50},
+    "x2": {"R": 206, "Rz": 125, "w": 38, "theta": 86.5, "phi": 50},
 }
 
 def main():
@@ -422,6 +430,8 @@ def main():
     ap.add_argument("--params", help="JSON file overriding DEFAULT")
     ap.add_argument("--out", default="mark.svg")
     ap.add_argument("--mono", default="mark-mono.svg")
+    ap.add_argument("--yaw", type=float, default=None, help="orbit the camera about the vertical axis (deg)")
+    ap.add_argument("--pitch", type=float, default=None, help="orbit the camera about the horizontal axis (deg)")
     ap.add_argument("--rot-crescent", type=float, default=None)
     ap.add_argument("--rot-x1", type=float, default=None)
     ap.add_argument("--rot-x2", type=float, default=None)
@@ -434,6 +444,8 @@ def main():
                 else: P[k] = v
     for key, val in (("crescent", a.rot_crescent), ("x1", a.rot_x1), ("x2", a.rot_x2)):
         if val is not None: P[key]["rot"] = val
+    if a.yaw is not None: P["yaw"] = a.yaw
+    if a.pitch is not None: P["pitch"] = a.pitch
     cam, rings, items, segments, forced = build(P)
     svg, stats = svg_text(P, cam, rings, items, segments)
     with open(a.out, "w") as f: f.write(svg)

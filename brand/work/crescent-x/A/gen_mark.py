@@ -37,22 +37,22 @@ INK   = "#111111"
 LIGHT = "#F3E7C3"
 GAP   = 7.5                     # weave gap width (units)
 
-# crescent
-OX, OY, R = 262.0, 256.0, 222.0  # outer circle
-CD, R2    = 23.0, 209.5          # inner circle: centre shifted CD to the left, radius R2
+# crescent: outer circle (O, R) minus an inner cut-out whose centre is shifted CD to the
+# left.  The cut-out is a circle stretched 3% horizontally (CRX x CRY): a pure circle with
+# the same tips (10.8 / 7.2 o'clock) came out ~25% thinner at 12 and 6 o'clock than the
+# reference; the slight stretch restores that weight while keeping the smooth taper.
+OX, OY, R = 265.0, 256.0, 222.0
+CD, CRX, CRY = 27.0, 213.0, 206.5
 
 # x1 (descending, upper-left -> lower-right).  Outer ellipse E and lens L, absolute.
 # The lens is longer, narrower, lower-right-shifted and rotated a few degrees flatter
 # than the outer ellipse, so it pokes out through the upper-right edge from about a
 # third of the way along: that leaves a thin horn at the upper-left end, an open upper
 # edge, and a thick band that tapers to a point on the crescent at the lower right.
-X1 = dict(E=(318.7, 284.3, 342.0, 72.0, 26.0),
-          L=(418.8, 297.2, 411.0, 47.5, 23.4))
-# x2 (ascending, lower-left -> upper-right).  Lens stays inside: thick upper-left edge
-# at the lower-left end, thick lower-right edge at the upper-right end (lens rotated
-# ~2 deg steeper than the outer ellipse and shifted ~3 units toward the lower-right).
-X2 = dict(E=(231.1, 267.8, 230.0, 54.8, -32.4),
-          L=(228.9, 272.9, 197.3, 35.1, -34.2))
+X1 = dict(E=(236.8, 259.3, 236.0, 56.0, 27.0),
+          L=(286.0, 250.8, 310.0, 36.0, 29.0))
+X2 = dict(E=(234.1, 267.8, 230.0, 54.8, -32.4),
+          L=(231.9, 272.9, 197.3, 35.1, -34.2))
 
 
 def f(v):
@@ -146,7 +146,7 @@ def band_path(E, L):
 
 def crescent_path():
     O = Ell(OX, OY, R, R, 0.0)
-    I = Ell(OX - CD, OY, R2, R2, 0.0)
+    I = Ell(OX - CD, OY, CRX, CRY, 0.0)
     d, kind = band_path(O, I)
     return d, kind, O, I
 
@@ -195,15 +195,17 @@ def diagnostics():
         pts = [tuple(round(v, 1) for v in E.pt(t)) for t in intersections(E, L)]
         print(f"{name}: outer/lens crossings (horn end, pointed tip) {pts}")
     # ring tips vs crescent band
-    for name, E in (("x1 lower-right tip", E1), ("x2 upper-right tip", E2)):
-        p = E.pt(0.0)
-        dO = math.hypot(p[0] - OX, p[1] - OY)
-        dI = math.hypot(p[0] - (OX - CD), p[1] - OY)
-        print(f"{name} at {tuple(round(v,1) for v in p)}: {round(dI - R2,1)} past inner edge, {round(R - dO,1)} inside outer edge")
-    for name, L in (("x1 lens LR tip", L1), ("x2 lens UR tip", L2)):
-        p = L.pt(0.0)
-        dI = math.hypot(p[0] - (OX - CD), p[1] - OY)
-        print(f"{name} at {tuple(round(v,1) for v in p)}: {round(dI - R2,1)} past inner edge")
+    def band_depth(p):
+        """how far p lies inside the crescent band, measured along the ray from O (units; <0 = in the hole)"""
+        t = math.atan2(p[1] - OY, p[0] - OX)
+        r = R
+        while r > 0 and not CI.inside((OX + r * math.cos(t), OY + r * math.sin(t))):
+            r -= 0.25
+        return math.hypot(p[0] - OX, p[1] - OY) - r, R - math.hypot(p[0] - OX, p[1] - OY)
+    x1tip = sorted(intersections(E1, L1), key=lambda t: E1.pt(t)[0])
+    for name, p in (("x1 pointed tip", E1.pt(x1tip[-1]) if x1tip else E1.pt(0.0)), ("x2 upper-right tip", E2.pt(0.0)), ("x2 lens UR tip", L2.pt(0.0))):
+        di, do = band_depth(p)
+        print(f"{name} at {tuple(round(v,1) for v in p)}: {round(di,1)} past crescent inner edge, {round(do,1)} inside outer edge")
     # crescent tips
     for t in intersections(CO, CI):
         p = CO.pt(t)
@@ -211,15 +213,10 @@ def diagnostics():
         print(f"crescent tip at {tuple(round(v,1) for v in p)}  angle {round(ang,1)}  clock {round(((ang+90)%360)/30,1)}")
     for ang in (0, 45, 90, -45, -90, 110, -110):
         t = math.radians(ang)
-        # inner edge along ray from O
-        d, r2 = CD, R2
-        tt = -(-d) * math.cos(t) * -1  # placeholder
-        # solve |O + s(cos,sin) - I| = R2
-        bx = OX - (OX - CD)
-        qb = 2 * (bx * math.cos(t))
-        qc = bx * bx - r2 * r2
-        s = (-qb + math.sqrt(qb * qb - 4 * qc)) / 2
-        print(f"crescent thickness at {ang:4d} deg: {round(R - s,1)}")
+        r = R
+        while r > 0 and not CI.inside((OX + r * math.cos(t), OY + r * math.sin(t))):
+            r -= 0.25
+        print(f"crescent thickness at {ang:4d} deg: {round(R - r,1)}")
     # bbox
     xs, ys = [], []
     for E in (E1, E2, CO):

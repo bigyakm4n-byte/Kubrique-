@@ -35,3 +35,15 @@ Source: `brand/reference/crescent-x-reference-crop.png` (the approved ChatGPT co
 
 Both: horns at about 10:30 and 7:30, near-circular arcs, lower horn tucks behind the descending ring end. B is slightly lighter in the crescent body.
 The same crescent spec is applied in the vector build (brand/work/crescent-x/final).
+
+## Round 2: gray rings, no cut-throughs (18 Oct 2026)
+
+Client feedback on variant A: bulge where the small ring meets the top of the crescent; the big ring reads as an S; white cut-throughs into the crescent not wanted; try a gray tone for the rings.
+Edit of variant A with gpt_image_2_5: rings #7A7A7A over a black crescent, no gaps, descending ring redrawn as a symmetric ellipse.
+
+| Variant | Job | Result |
+|---|---|---|
+| C | 89ffcf91-3b30-45ab-b6e0-cf287223103b | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194518_89ffcf91-3b30-45ab-b6e0-cf287223103b.png) |
+| D | 4b07ef19-c80a-4281-9425-e9bddfe10452 | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194518_4b07ef19-c80a-4281-9425-e9bddfe10452.png) |
+
+C: lighter gray, slimmer rings. D: slightly darker gray, fuller rings. The vector build now treats the two-tone version (black crescent, gray rings, no cuts) as the hero mark.

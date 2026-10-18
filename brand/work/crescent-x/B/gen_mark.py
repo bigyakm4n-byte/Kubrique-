@@ -28,8 +28,12 @@ Parameters are given in the pixel space of the approved reference bitmap
 (1170 x 1191 px) so they can be measured straight off it; the mark is then scaled
 and centred into the 512 x 512 viewBox.
 
-Run:  python3 gen_mark.py [key=value ...]
-Writes mark.svg, mark-light.svg, mark-overlay.svg, preview.html, params.json.
+Run:  python3 gen_mark.py [key=value ...]        (any parameter below can be overridden)
+Writes mark.svg (#111111), mark-light.svg (#F3E7C3), mark-overlay.svg (red review aid),
+preview.html (reference / mark / overlay / sizes) and params.json next to itself.
+Review render:
+  /opt/pw-browsers/chromium --headless=new --no-sandbox --disable-gpu --hide-scrollbars \
+      --window-size=1200,1000 --screenshot=review.png file://$PWD/preview.html
 """
 import math, os, sys, json
 
@@ -46,7 +50,7 @@ P = dict(
     C_r=0.0,                            # inner radius; 0 = derive it from C_tip (keeps the horns where the reference has them)
     # ring x1 (descending, upper-left -> lower-right) --------------------------
     x1_cx=548.3, x1_cy=536.9, x1_a=372.0, x1_b=86.0, x1_th=27.31,
-    x1_a2=345.0, x1_wneg=5.5, x1_wpos=86.0, x1_tau=0.94, x1_s=15.0,
+    x1_a2=345.0, x1_wneg=5.5, x1_wpos=85.0, x1_tau=0.94, x1_s=15.0,
     # ring x2 (ascending, lower-left -> upper-right) ---------------------------
     x2_cx=560.3, x2_cy=550.5, x2_a=377.0, x2_b=94.0, x2_th=-30.0,
     x2_a2=324.5, x2_wneg=43.25, x2_wpos=30.5, x2_tau=-2.25, x2_s=-9.0,
@@ -358,7 +362,7 @@ def svg(ink, S, cres, x1, x2, report, note="", extra=""):
     masks = []
     for u, overs in unders.items():
         uses = "\n      ".join(
-            f'<use href="#shape-{o}" fill="#000" fill-rule="evenodd" stroke="#000" stroke-width="{f(2*g)}" stroke-linejoin="round"/>'
+            f'<use href="#shape-{o}" xlink:href="#shape-{o}" fill="#000" fill-rule="evenodd" stroke="#000" stroke-width="{f(2*g)}" stroke-linejoin="round"/>'
             for o in overs)
         masks.append(f'''    <mask id="cut-{u}" maskUnits="userSpaceOnUse" x="0" y="0" width="{f(P['box'])}" height="{f(P['box'])}">
       <rect width="{f(P['box'])}" height="{f(P['box'])}" fill="#fff"/>
@@ -368,7 +372,7 @@ def svg(ink, S, cres, x1, x2, report, note="", extra=""):
     body = []
     for k in order:
         m = f' mask="url(#cut-{k})"' if k in unders else ""
-        body.append(f'    <use id="ring-{k}" href="#shape-{k}"{m}/>')
+        body.append(f'    <use id="ring-{k}" href="#shape-{k}" xlink:href="#shape-{k}"{m}/>')
     tbl = "; ".join(f"{o} over {u}" for o, u in TABLE)
     rep = "\n    ".join(report)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 {f(P['box'])} {f(P['box'])}" width="{f(P['box'])}" height="{f(P['box'])}" role="img" aria-label="Kubrique CRESCENT X mark">

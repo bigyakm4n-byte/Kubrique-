@@ -47,3 +47,15 @@ Edit of variant A with gpt_image_2_5: rings #7A7A7A over a black crescent, no ga
 | D | 4b07ef19-c80a-4281-9425-e9bddfe10452 | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194518_4b07ef19-c80a-4281-9425-e9bddfe10452.png) |
 
 C: lighter gray, slimmer rings. D: slightly darker gray, fuller rings. The vector build now treats the two-tone version (black crescent, gray rings, no cuts) as the hero mark.
+
+## Round 3: flipped crescent, no gray (18 Oct 2026)
+
+Client direction: go back to the first reference; flip the crescent the conventional way (Turkish-flag style, body left, horns right); more space before the wordmark; no gray, use a considered colour choice; sharpen.
+
+| Variant | Palette | Job | Result | Verdict |
+|---|---|---|---|---|
+| E | black | 89efb10b-9dd3-44e6-a444-aa6868cb8938 | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194919_89efb10b-9dd3-44e6-a444-aa6868cb8938.png) | crescent not flipped |
+| F | navy #0B1F3A crescent, gold #C9A24A rings | 6e37182d-883c-4b30-a244-f52ac8f3540c | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194918_6e37182d-883c-4b30-a244-f52ac8f3540c.png) | flip correct, spacing correct, keeper |
+| G | black crescent, teal rings | 82fd1fb8-3254-4778-8702-5d098f99986c | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194918_82fd1fb8-3254-4778-8702-5d098f99986c.png) | crescent not flipped |
+
+The vector finishing spec now matches F: crescent body left, horns right; hero in one colour with small even gaps; colour variant navy and gold; one cap-height of space before the wordmark.

@@ -54,11 +54,11 @@ Client direction: go back to the first reference; flip the crescent the conventi
 
 | Variant | Palette | Job | Result | Verdict |
 |---|---|---|---|---|
-| E | black | 89efb10b-9dd3-44e6-a444-aa6868cb8938 | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194919_89efb10b-9dd3-44e6-a444-aa6868cb8938.png) | crescent not flipped |
+| E | black | 89efb10b-9dd3-44e6-a444-aa6868cb8938 | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194919_89efb10b-9dd3-44e6-a444-aa6868cb8938.png) | flipped correctly; client likes it |
 | F | navy #0B1F3A crescent, gold #C9A24A rings | 6e37182d-883c-4b30-a244-f52ac8f3540c | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194918_6e37182d-883c-4b30-a244-f52ac8f3540c.png) | flip correct, spacing correct, keeper |
-| G | black crescent, teal rings | 82fd1fb8-3254-4778-8702-5d098f99986c | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194918_82fd1fb8-3254-4778-8702-5d098f99986c.png) | crescent not flipped |
+| G | black crescent, teal rings | 82fd1fb8-3254-4778-8702-5d098f99986c | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_194918_82fd1fb8-3254-4778-8702-5d098f99986c.png) | flipped correctly; client prefers this palette |
 
-The vector finishing spec now matches F: crescent body left, horns right; hero in one colour with small even gaps; colour variant navy and gold; one cap-height of space before the wordmark.
+Correction: E and G were flipped correctly; the earlier note was wrong. Client prefers G (teal rings) with E's ring spacing. The vector finishing spec: crescent body left, horns right; hero in one colour with small even gaps; colour variant black crescent with teal rings; rings inside the crescent's opening with clear air; bottom-left junction mirrors the top-left; one cap-height of space before the wordmark.
 
 Mono versions of F (all black, same geometry):
 
@@ -66,3 +66,15 @@ Mono versions of F (all black, same geometry):
 |---|---|---|
 | H | 2201ba2b-ac8d-45bd-93cc-0b883774a5fe | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_195043_2201ba2b-ac8d-45bd-93cc-0b883774a5fe.png) |
 | I | 93f90f8f-62c7-494b-bf1d-9588ee3e9ba0 | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_195043_93f90f8f-62c7-494b-bf1d-9588ee3e9ba0.png) |
+
+## Round 4: teal rings with E's spacing (18 Oct 2026)
+
+Client: G (teal) is the better version but the rings sit too far onto the crescent; use E's ring spacing; the bottom-left junction must mirror the top-left one.
+Edit of G with E as the layout reference, gpt_image_2_5.
+
+| Variant | Job | Result |
+|---|---|---|
+| J | 2078deeb-8de1-4237-bf98-013f13c3345c | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_200359_2078deeb-8de1-4237-bf98-013f13c3345c.png) |
+| K | d9b634d1-86d4-45e9-85e2-7825694df677 | [png](https://d8j0ntlcm91z4.cloudfront.net/user_3KVfaUKV2FeygtO041gqKnLDlNe/hf_20261018_200359_d9b634d1-86d4-45e9-85e2-7825694df677.png) |
+
+J: slightly more compact rings. K: rings a touch larger. Both: rings inside the opening with clear air, bottom-left junction mirrors top-left.

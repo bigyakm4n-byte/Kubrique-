@@ -1,86 +1,67 @@
 #!/usr/bin/env python3
 """
-CRESCENT X - final mark generator for KUBRIQUE (plain python, no numpy).
+CRESCENT X - final (round 3) mark generator for KUBRIQUE.  Plain python, no numpy.
 
 Writes, next to itself:
-  crescent-x-mono.svg        #111111 on transparent      crescent-x-mono-light.svg   #F3E7C3
-  crescent-x.svg             animated (CSS rotation + SMIL sheen + colour cycle, no JS)
-  crescent-x-lockup.svg      mark + wordmark "CRESCENT X" (live font, outline before print)
-  preview.html / frames.html review pages (rendered to review.png / frames.png by the workflow)
+  crescent-x-mono.svg        hero mark, one fill #111111 on transparent
+  crescent-x-mono-light.svg  same, fill #F3E7C3 (for dark backgrounds)
+  crescent-x-colour.svg      crescent #111111, rings deep teal #0F6E74, rings in front
+  crescent-x.svg             animated: slow whole-mark rotation (CSS) + per-ring sheen and
+                             gold-rose-violet-teal colour cycle (SMIL), no JavaScript
+  crescent-x-lockup.svg      mark + wordmark "CRESCENT X" (live font; outline before print)
+  preview.html / frames.html review pages (rendered to review.png / frames.png)
 
-Construction (viewBox 0 0 512 512, "u" = viewBox units; crescent centre O=(265,256), R=222)
-  ring-crescent : circle (O,R) minus a cut-out ellipse CUT (216.7 x 202.4 u, rotated +8.4 deg,
-                  centre 25.8 u left of O).  Fitted to the reference's inner edge with the horns
-                  pinned at -126 / +134 deg (10.8 / 7.5 o'clock).  Two exact arcs.
-  ring-x2       : ascending ring, -31.7 deg: outer ellipse minus a slightly smaller lens ellipse
-                  that is shifted toward the lower-right edge and twisted -2.3 deg, so the
-                  upper-left band thins and the lower-right band thickens toward the upper-right
-                  tip (a hoop seen from slightly above).  Evenodd pair of ellipses (four arcs).
-  ring-x1       : descending ring, +27.3 deg.  The reference's x1 is not an ellipse minus an
-                  ellipse: it is a swooshing band (51 u at the centre) that tapers to a blunt
-                  rounded end pushed into the crescent at ~46 deg, and whose upper-left end
-                  rounds over into a thin horn (sliver) that runs back along the top of the loop
-                  and fades out before the X centre, leaving the loop open.  It is drawn as ONE
-                  closed outline: each long edge is a cubic Hermite spline n(s) in the ring's own
-                  frame (knots = (s, n, dn/ds), measured from the approved reference), which is
-                  exactly a chain of cubic Beziers, and the three rounded ends are pairs of
-                  tangent-continuous Beziers.  Sixteen smooth segments; sharp only at the sliver tip.
+Construction (viewBox 0 0 512 512; "u" = viewBox units)
+  ring-crescent : a classic two-circle lunar crescent facing RIGHT (Turkish-flag orientation):
+                  outer circle (centre O, radius R) minus an inner circle of radius r whose
+                  centre is shifted d to the RIGHT along the horizontal axis only, so the two
+                  horns are mirror images about the horizontal centre line.  d and r are solved
+                  from the horn angle (+/- HORN_DEG) and the maximum thickness THICK at 9 o'clock.
+                  Two exact arcs.
+  ring-x1       : descending orbital ring, tilt +X1.th deg: outer ellipse (A x B) minus a lens
+                  ellipse (a x b) with the same centre and tilt, shifted d along the ring's
+                  perpendicular, so the band is thick on one long edge and thin on the other and
+                  the two ends are identical (mirror-symmetric about the minor axis).  Thick on
+                  its lower-left edge.  Evenodd pair of ellipses (four exact arcs).
+  ring-x2       : ascending orbital ring, tilt X2.th deg, same construction, thick on its
+                  upper-left edge.
+  The two rings share the crescent's horizontal centre line; their centres sit to the right of
+  the crescent's centre so that each ring's left tip clears the crescent's inner edge by TIP_GAP
+  (solved numerically, the same gap for both rings), and the right tips sit in the open mouth of
+  the crescent, past the horn tips.  The rings never lie across the crescent body.
 
-Weave (verified against the reference crops): x1 over x2 at both centre crossings; x1 over the
-crescent at its lower-right end; x2 over the crescent at its upper-right tip.  Crescent horns,
-the x1 loop/horn and the x2 lower-left end cross nothing.  Stacking: crescent -> x2 -> x1.
-Gaps (GAP u each side of the over-ring) are explicit cut shapes: each under-ring is masked by the
-over-ring's outline stroked 2*GAP wide, so the gaps are transparent and the whole mark recolours
-from the single fill on <g id="mark">.  gen_mark.py enumerates every crossing between the
-outlines and refuses to write if one is not in the expected list (so a re-tune cannot silently
-create a new, un-woven crossing).
+Weave: x1 over x2 at the X centre (the only crossings).  The gap (GAP each side of x1) is an
+explicit transparent cut: x2 is drawn through a mask in which x1's outline is stroked 2*GAP wide,
+so the whole mark recolours from the single fill on <g id="mark">.  The script enumerates every
+crossing between the outlines and refuses to write if one is not in the expected table (a
+re-tune cannot silently create an un-woven crossing, e.g. a ring end landing on the crescent).
 """
 import math, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 # ------------------------------------------------------------------ parameters (u)
-INK, LIGHT = "#111111", "#F3E7C3"
-GAP = 7.5                                   # weave gap each side of the over-ring (ref: 6.7-7.9)
+INK, LIGHT, TEAL = "#111111", "#F3E7C3", "#0F6E74"
+GAP = 7.5            # weave gap each side of x1 where it passes over x2
+TIP_GAP = 9.5        # clear air between each ring's left tip and the crescent's inner edge
 
-OX, OY, R = 265.0, 256.0, 222.0             # crescent outer circle
-CUT = (239.2, 255.4, 216.7, 202.4, 8.4)     # cut-out ellipse: cx, cy, a, b, rotation (deg, cw)
+R = 222.0            # crescent outer radius
+HORN_DEG = 47.0      # horn tips at +/- HORN_DEG from the horizontal (about 1:25 and 4:35 o'clock)
+THICK = 47.0         # maximum crescent thickness, at 9 o'clock (10.6 % of the outer diameter)
 
-# x2 (ascending): outer ellipse E and lens L, each (cx, cy, a, b, rotation)
-X2E = (231.8, 268.4, 225.1, 55.2, -31.7)
-X2L = (227.3, 274.0, 199.7, 35.6, -34.0)
-
-# x1 (descending): local frame (origin, axis angle); s along the axis toward the lower right,
-# n perpendicular, positive toward the lower-left.  Knots are (s, n, dn/ds).
-X1_O, X1_TH = (223.74, 261.10), 27.3
-X1_UPPER = [(-185.0, -13.2, 0.30), (-150.0, -7.6, 0.11), (-100.0, -4.2, 0.04), (-40.0, -3.3, 0.0),
-            (40.0, -5.0, 0.0), (110.0, -4.8, 0.06), (170.0, 1.3, 0.25), (200.0, 11.5, 0.50),
-            (225.5, 26.6, 1.05)]                                   # band's upper-right edge
-X1_LOWER = [(-222.0, 4.0, 1.05), (-180.0, 30.5, 0.38), (-130.0, 43.6, 0.14), (-70.0, 47.8, 0.0),
-            (0.0, 46.0, -0.04), (70.0, 41.7, -0.085), (150.0, 36.5, 0.0), (200.0, 39.8, 0.17),
-            (214.0, 43.0, 0.40)]                                   # band's lower-left edge (ends 11.5 u before the
-                                                                   # upper edge so the end chord is square to the band)
-X1_HORN_OUT = [(-222.0, -42.0, -0.90), (-200.0, -56.8, -0.45), (-170.0, -67.5, -0.25),
-               (-135.0, -73.4, -0.09), (-100.0, -75.5, 0.0), (-64.0, -74.6, 0.03)]   # sliver, outer edge
-X1_HORN_IN = [(-185.0, -46.5, -1.20), (-170.0, -56.8, -0.50), (-145.0, -65.0, -0.25),
-              (-115.0, -70.9, -0.12), (-85.0, -73.6, -0.05), (-64.0, -74.6, -0.03)]  # sliver, inner edge
-X1_END = (-231.1, -22.7)      # extreme of the ring's rounded upper-left end
-X1_HOLE_END = (-191.0, -29.5) # extreme of the loop hole's rounded end
-X1_TIP_REACH = 9.0            # the lower-right cap's nose sits this far beyond the mid-point of its edge ends
+# rings: outer ellipse A x B, lens a x b, lens offset d along the ring's +n axis, tilt th (deg)
+# (+n = (-sin th, cos th): down-left for the descending ring, down-right for the ascending one)
+X1 = dict(A=200.0, B=49.0, a=179.0, b=24.0, d=-19.0, th=35.0)   # thick (+n) lower-left edge 44 u, thin 6 u
+X2 = dict(A=196.0, B=48.0, a=176.0, b=30.0, d=6.0, th=-33.0)    # thick (-n) upper-left edge 24 u, thin 12 u
 
 TITLE = "Crescent X"
-ARIA = "Crescent X, the Kubrique logo mark: a crescent and two interlocking orbital rings forming an X"
+ARIA = "Crescent X, the Kubrique logo mark: a lunar crescent facing right and two interlocking orbital rings forming an X"
 
 
 # ------------------------------------------------------------------ helpers
 def f(v):
     s = f"{v:.2f}".rstrip("0").rstrip(".")
     return "0" if s in ("-0", "") else s
-
-
-def unit(v):
-    l = math.hypot(*v)
-    return (v[0] / l, v[1] / l)
 
 
 class Ell:
@@ -136,9 +117,8 @@ def intersections(E, L, n=4000):
     return ts
 
 
-def crescent():
-    """circle minus cut-out ellipse, as outer arc horn->horn (through 3 o'clock) + inner arc back"""
-    O, I = Ell(OX, OY, R, R, 0.0), Ell(*CUT)
+def crescent_path(O, I):
+    """circle O minus circle I, as outer arc horn->horn (through the body) + inner arc back"""
     ts = intersections(O, I)
     assert len(ts) == 2, f"crescent: expected 2 horns, got {len(ts)}"
     t1, t2 = ts
@@ -150,117 +130,74 @@ def crescent():
     midl = u1 + ((u2 - u1) % (2 * math.pi)) / 2
     ccw = not O.inside(I.pt(midl))
     d = f"M{f(p1[0])} {f(p1[1])} {O.arc(t1, t2)} {I.arc(u1, u2, ccw=ccw)} Z"
-    # polylines of the two visible edges (for the crossing check)
     n = 400
     outer = [O.pt(t1 + ((t2 - t1) % (2 * math.pi)) * i / n) for i in range(n + 1)]
     sp = ((u1 - u2) if ccw else (u2 - u1)) % (2 * math.pi)
     inner = [I.pt(u1 + (-sp if ccw else sp) * i / n) for i in range(n + 1)]
-    horns = [math.degrees(math.atan2(p[1] - OY, p[0] - OX)) for p in (p1, p2)]
-    return d, [("outer", outer), ("inner", inner)], O, I, horns
+    horns = [math.degrees(math.atan2(p[1] - O.cy, p[0] - O.cx)) for p in (p1, p2)]
+    return d, [("outer", outer), ("inner", inner)], horns
 
 
-# ---- x1: Hermite edges -> cubic Beziers in the local frame, then into the global frame
-X1_C, X1_S = math.cos(math.radians(X1_TH)), math.sin(math.radians(X1_TH))
+def ring(spec, cx, cy):
+    """outer ellipse and lens for a ring spec centred at (cx, cy)"""
+    th = math.radians(spec["th"])
+    nx, ny = -math.sin(th), math.cos(th)
+    E = Ell(cx, cy, spec["A"], spec["B"], spec["th"])
+    L = Ell(cx + spec["d"] * nx, cy + spec["d"] * ny, spec["a"], spec["b"], spec["th"])
+    return E, L
 
 
-def x1_global(p):
-    s, n = p
-    return (X1_O[0] + s * X1_C - n * X1_S, X1_O[1] + s * X1_S + n * X1_C)
+# ------------------------------------------------------------------ solve the crescent
+cosH = math.cos(math.radians(HORN_DEG))
+CUT_D = THICK * (2 * R - THICK) / (2 * (R * (1 + cosH) - THICK))   # inner circle centre offset (right)
+CUT_R = R - THICK + CUT_D                                          # inner circle radius
 
 
-def hermite_beziers(knots):
-    """[(s, n, m)] -> list of cubic Bezier control quads in local coords, increasing s"""
-    out = []
-    for (s0, n0, m0), (s1, n1, m1) in zip(knots, knots[1:]):
-        h = s1 - s0
-        out.append(((s0, n0), (s0 + h / 3, n0 + m0 * h / 3), (s1 - h / 3, n1 - m1 * h / 3), (s1, n1)))
-    return out
+# ------------------------------------------------------------------ place the rings (crescent centre at the origin)
+def tip_gap(spec, cx):
+    """clear air between the ring's left tip and the inner circle (centre (CUT_D, 0), radius CUT_R)"""
+    E, L = ring(spec, cx, 0.0)
+    worst = 0.0
+    for p in E.poly(1440):
+        if p[0] < cx:
+            worst = max(worst, math.hypot(p[0] - CUT_D, p[1]))
+    return CUT_R - worst
 
 
-def reverse_beziers(segs):
-    return [(d, c, b, a) for (a, b, c, d) in reversed(segs)]
+def solve_cx(spec):
+    lo, hi = -100.0, 200.0
+    for _ in range(60):
+        mid = 0.5 * (lo + hi)
+        if tip_gap(spec, mid) < TIP_GAP:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
 
 
-def cap_bezier(A, ta, B, tb):
-    """one cubic from A (unit tangent ta) to B (unit tangent tb), handles sized like a circular arc"""
-    c = (B[0] - A[0], B[1] - A[1])
-    L = math.hypot(*c)
-    cosang = max(-1.0, min(1.0, ta[0] * tb[0] + ta[1] * tb[1]))
-    th = math.acos(cosang)
-    if th < 1e-6:
-        k = L / 3
-    else:
-        r = L / (2 * math.sin(th / 2))
-        k = (4 / 3) * math.tan(th / 4) * r
-    return (A, (A[0] + ta[0] * k, A[1] + ta[1] * k), (B[0] - tb[0] * k, B[1] - tb[1] * k), B)
+X1_CX, X2_CX = solve_cx(X1), solve_cx(X2)
 
+# bbox of the union (relative to the crescent centre) -> centre the composition in the box
+_O0, _I0 = Ell(0, 0, R, R, 0), Ell(CUT_D, 0, CUT_R, CUT_R, 0)
+_d, _edges, _ = crescent_path(_O0, _I0)
+_pts = _edges[0][1] + ring(X1, X1_CX, 0)[0].poly() + ring(X2, X2_CX, 0)[0].poly()
+_bx0, _bx1 = min(p[0] for p in _pts), max(p[0] for p in _pts)
+_by0, _by1 = min(p[1] for p in _pts), max(p[1] for p in _pts)
+OX, OY = 256.0 - 0.5 * (_bx0 + _bx1), 256.0 - 0.5 * (_by0 + _by1)   # crescent centre in the box
 
-def x1_outline():
-    """closed outline of x1 as a list of cubic Beziers (local coords)"""
-    up, lo = X1_UPPER, X1_LOWER
-    ho, hi = X1_HORN_OUT, X1_HORN_IN
-    segs = []
-    # band upper edge, +s
-    segs += hermite_beziers(up)
-    # lower-right rounded end: U8 -> nose P -> L8
-    U8, L8 = up[-1], lo[-1]
-    tU = unit((1.0, U8[2]))
-    dmid = unit((1.0, 0.5 * (U8[2] + L8[2])))
-    mid = (0.5 * (U8[0] + L8[0]), 0.5 * (U8[1] + L8[1]))
-    P = (mid[0] + X1_TIP_REACH * dmid[0], mid[1] + X1_TIP_REACH * dmid[1])
-    tP = (-dmid[1], dmid[0])
-    tL = unit((-1.0, -L8[2]))
-    segs.append(cap_bezier((U8[0], U8[1]), tU, P, tP))
-    segs.append(cap_bezier(P, tP, (L8[0], L8[1]), tL))
-    # band lower edge, -s
-    segs += reverse_beziers(hermite_beziers(lo))
-    # upper-left rounded end: L0 -> extreme -> B0 (start of the horn's outer edge)
-    L0, B0 = lo[0], ho[0]
-    segs.append(cap_bezier((L0[0], L0[1]), unit((-1.0, -L0[2])), X1_END, (0.0, -1.0)))
-    segs.append(cap_bezier(X1_END, (0.0, -1.0), (B0[0], B0[1]), unit((1.0, B0[2]))))
-    # horn outer edge, +s, to the sliver tip
-    segs += hermite_beziers(ho)
-    # horn inner edge (hole's upper boundary), -s, back to the hole's end
-    segs += reverse_beziers(hermite_beziers(hi))
-    # hole's rounded end: H0 -> extreme -> U0
-    H0, U0 = hi[0], up[0]
-    segs.append(cap_bezier((H0[0], H0[1]), unit((-1.0, -H0[2])), X1_HOLE_END, (0.0, 1.0)))
-    segs.append(cap_bezier(X1_HOLE_END, (0.0, 1.0), (U0[0], U0[1]), unit((1.0, U0[2]))))
-    return segs
-
-
-def bez_pt(seg, t):
-    (x0, y0), (x1, y1), (x2, y2), (x3, y3) = seg
-    u = 1 - t
-    return (u * u * u * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x3,
-            u * u * u * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t * y3)
-
-
-def x1_path_and_poly():
-    segs = [tuple(x1_global(p) for p in seg) for seg in x1_outline()]
-    d = [f"M{f(segs[0][0][0])} {f(segs[0][0][1])}"]
-    for (_, c1, c2, p3) in segs:
-        d.append(f"C{f(c1[0])} {f(c1[1])} {f(c2[0])} {f(c2[1])} {f(p3[0])} {f(p3[1])}")
-    d.append("Z")
-    poly = []
-    for seg in segs:
-        poly += [bez_pt(seg, i / 24) for i in range(24)]
-    poly.append(poly[0])
-    return " ".join(d), poly, segs
-
-
-# ------------------------------------------------------------------ build
-CRES_D, CRES_EDGES, CO, CI, HORNS = crescent()
-E2, L2 = Ell(*X2E), Ell(*X2L)
+CO, CI = Ell(OX, OY, R, R, 0.0), Ell(OX + CUT_D, OY, CUT_R, CUT_R, 0.0)
+CRES_D, CRES_EDGES, HORNS = crescent_path(CO, CI)
+E1, L1 = ring(X1, OX + X1_CX, OY)
+E2, L2 = ring(X2, OX + X2_CX, OY)
+X1_D = E1.whole() + " " + L1.whole()
 X2_D = E2.whole() + " " + L2.whole()
-X1_D, X1_POLY, X1_SEGS = x1_path_and_poly()
-OUTLINES = {"crescent": CRES_EDGES, "x2": [("outer", E2.poly()), ("lens", L2.poly())], "x1": [("outline", X1_POLY)]}
+OUTLINES = {"crescent": CRES_EDGES,
+            "x1": [("outer", E1.poly()), ("lens", L1.poly())],
+            "x2": [("outer", E2.poly()), ("lens", L2.poly())]}
+XC = (0.5 * (E1.cx + E2.cx), OY)   # ring centre
 
 # expected crossings (shape pair, approximate location in u, radius) -> who is over
-EXPECTED = [("x1", "x2", (169, 257), 50, "x1 over x2 (upper-left band of x2 crosses x1's two edges, X centre)"),
-            ("x1", "x2", (263, 303), 50, "x1 over x2 (lower-right band of x2 crosses x1's two edges, X centre)"),
-            ("x1", "crescent", (410, 400), 50, "x1 over crescent (x1's rounded end pierces the band)"),
-            ("x2", "crescent", (420, 150), 50, "x2 over crescent (x2's tip docks on the inner edge)")]
+EXPECTED = [("x1", "x2", XC, 120, "x1 over x2 (X centre)")]
 
 
 def seg_intersect(p1, p2, p3, p4):
@@ -282,7 +219,6 @@ def crossings():
         for j in range(i + 1, len(keys)):
             for na, A in OUTLINES[keys[i]]:
                 for nb, B in OUTLINES[keys[j]]:
-                    # coarse bbox grid to keep this quick
                     for a0, a1 in zip(A, A[1:]):
                         ax0, ax1 = min(a0[0], a1[0]) - 0.01, max(a0[0], a1[0]) + 0.01
                         ay0, ay1 = min(a0[1], a1[1]) - 0.01, max(a0[1], a1[1]) + 0.01
@@ -312,41 +248,53 @@ def crossings():
     return report, bad
 
 
+def in_crescent(p):
+    return math.hypot(p[0] - CO.cx, p[1] - CO.cy) <= R and math.hypot(p[0] - CI.cx, p[1] - CI.cy) >= CUT_R
+
+
+def ring_clearance(E):
+    """min distance from the ring's outer outline to the crescent outline; also whether any point is inside the crescent"""
+    cres = [p for _, pts in CRES_EDGES for p in pts[::2]]
+    best, where, bad = 1e9, None, 0
+    for p in E.poly(720):
+        if in_crescent(p):
+            bad += 1
+        dmin = min(math.hypot(p[0] - q[0], p[1] - q[1]) for q in cres)
+        if dmin < best:
+            best, where = dmin, p
+    return best, where, bad
+
+
 # ------------------------------------------------------------------ SVG
-def defs_block(ink_id_prefix="cx"):
+def defs_block(P="cx"):
     g2 = f(2 * GAP)
-    P = ink_id_prefix
     return f'''    <path id="{P}-crescent" d="{CRES_D}"/>
-    <path id="{P}-x1" d="{X1_D}"/>
+    <path id="{P}-x1" fill-rule="evenodd" d="{X1_D}"/>
     <path id="{P}-x2" fill-rule="evenodd" d="{X2_D}"/>
-    <!-- weave gaps: each under-ring is cut by the over-ring's outline stroked {g2} wide (transparent gaps) -->
+    <!-- weave gap: x2 is cut by x1's outline stroked {g2} wide, so the gaps are transparent -->
     <mask id="{P}-under-x1" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
       <rect width="512" height="512" fill="#fff"/>
-      <use href="#{P}-x1" xlink:href="#{P}-x1" fill="#000" stroke="#000" stroke-width="{g2}" stroke-linejoin="round"/>
-    </mask>
-    <mask id="{P}-under-x1-x2" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
-      <rect width="512" height="512" fill="#fff"/>
-      <use href="#{P}-x1" xlink:href="#{P}-x1" fill="#000" stroke="#000" stroke-width="{g2}" stroke-linejoin="round"/>
-      <use href="#{P}-x2" xlink:href="#{P}-x2" fill="#000" fill-rule="evenodd" stroke="#000" stroke-width="{g2}" stroke-linejoin="round"/>
+      <use href="#{P}-x1" xlink:href="#{P}-x1" fill="#000" fill-rule="evenodd" stroke="#000" stroke-width="{g2}" stroke-linejoin="round"/>
     </mask>'''
 
 
 WEAVE_COMMENT = '''  <!--
-    CRESCENT X. Weave table (over, under): x1 over x2 at the X centre; x1 over the crescent at the lower
-    right; x2 over the crescent at the upper right. Stacking crescent, x2, x1; the gaps are transparent
-    cut shapes (masks), so recolour the whole mark by changing the one fill on #mark.
+    CRESCENT X. Weave table (over, under): x1 (descending ring) over x2 (ascending ring) at the X
+    centre; neither ring crosses the crescent (their left tips clear its inner edge, their right
+    tips sit in its open mouth). Stacking crescent, x2, x1; the gap is a transparent cut shape
+    (mask), so recolour the whole mark by changing the one fill on #mark.
     Generated by gen_mark.py - edit the parameters there, not this file.
   -->'''
 
 
 def rings_block(prefix="cx", fills=None):
     fl = lambda k: f' fill="{fills[k]}"' if fills else ""
-    return f'''    <use id="ring-crescent" href="#{prefix}-crescent" xlink:href="#{prefix}-crescent" mask="url(#{prefix}-under-x1-x2)"{fl("crescent")}/>
+    return f'''    <use id="ring-crescent" href="#{prefix}-crescent" xlink:href="#{prefix}-crescent"{fl("crescent")}/>
     <use id="ring-x2" href="#{prefix}-x2" xlink:href="#{prefix}-x2" mask="url(#{prefix}-under-x1)"{fl("x2")}/>
     <use id="ring-x1" href="#{prefix}-x1" xlink:href="#{prefix}-x1"{fl("x1")}/>'''
 
 
-def svg_mono(ink):
+def svg_static(ink, fills=None):
     return f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="{ARIA}">
   <title>{TITLE}</title>
 {WEAVE_COMMENT}
@@ -354,21 +302,21 @@ def svg_mono(ink):
 {defs_block()}
   </defs>
   <g id="mark" fill="{ink}">
-{rings_block()}
+{rings_block(fills=fills)}
   </g>
 </svg>
 '''
 
 
-# colour cycle: gold -> rose -> violet -> teal -> gold (24 s); sheen = lighter tint of the same hue
+# colour cycle: gold -> rose -> violet -> teal -> gold (24 s); sheen = lighter tint, deep = darker shade of the same hue
 BASE = ["#D9B35A", "#D98A9A", "#9A86D9", "#6FC7C2", "#D9B35A"]
 SHEEN = ["#FFF1C2", "#FFD6DE", "#DCD3FF", "#C9F6F2", "#FFF1C2"]
 DEEP = ["#B88F36", "#B8647A", "#6F5CC2", "#3FA39D", "#B88F36"]
 
 
 def gradient(gid, cx, cy, half, period, reverse, begin="0s"):
-    """linear gradient across the ring (userSpaceOnUse) that rotates about the ring's centre, so a
-    bright sheen band sweeps round the ring like a highlight on a spinning hoop"""
+    """linear gradient across the ring (userSpaceOnUse) rotating about the ring's centre, so a bright
+    sheen band sweeps round the ring like a highlight on a spinning hoop; stops cycle the colours"""
     vals = ";".join
     fr, to = ("360", "0") if reverse else ("0", "360")
     stops = ""
@@ -395,9 +343,9 @@ def svg_animated(begin="0s", delay="0s"):
   <defs>
 {defs_block()}
     <!-- per-ring sheen: a rotating gradient (own period each, x2 reversed) whose stops cycle gold-rose-violet-teal over 24 s -->
-{gradient("cx-sheen-crescent", OX, OY, R, 26, False, begin)}
-{gradient("cx-sheen-x1", X1_O[0], X1_O[1], 240, 14, False, begin)}
-{gradient("cx-sheen-x2", X2E[0], X2E[1], 230, 20, True, begin)}
+{gradient("cx-sheen-crescent", CO.cx, CO.cy, R, 26, False, begin)}
+{gradient("cx-sheen-x1", E1.cx, E1.cy, X1["A"], 14, False, begin)}
+{gradient("cx-sheen-x2", E2.cx, E2.cy, X2["A"], 20, True, begin)}
   </defs>
   <g id="spin">
     <g id="mark" fill="{BASE[0]}">
@@ -408,77 +356,116 @@ def svg_animated(begin="0s", delay="0s"):
 '''
 
 
+# lockup geometry: mark at 1.5x, wordmark below with 1.5 cap heights of clear space
+LK_SCALE, LK_FS, LK_LS = 1.5, 92.0, 0.25
+LK_CAP = 0.70 * LK_FS                       # Montserrat / Jost cap height ~0.70 em
+LK_TOP = 111.0                              # top margin to the mark's top (= bottom margin below the baseline)
+LK_X = (1024 - 512 * LK_SCALE) / 2
+LK_Y = LK_TOP - _by0 * LK_SCALE - 256 * LK_SCALE + 256 * LK_SCALE  # placeholder, fixed below
+
+
 def svg_lockup(ink=INK):
-    # mark at 1.5x in a 1024 x 1080 box (mark spans y 111..777), wordmark baseline at 932: cap height ~66 u,
-    # so the gap between the mark and the type is ~90 u, about an eighth of the mark's width, as in the reference. letter-spacing adds a trailing space after
-    # the last glyph, so the text anchor is nudged right by half of one spacing to centre it optically.
-    fs, ls = 92.0, 0.25
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1080" width="1024" height="1080" role="img" aria-label="{ARIA}, with the wordmark CRESCENT X">
+    top_of_mark = 256 + _by0            # mark's top in the 512 box (bbox is centred)
+    bottom_of_mark = 256 + _by1
+    ty = LK_TOP - top_of_mark * LK_SCALE
+    mark_bottom = ty + bottom_of_mark * LK_SCALE
+    gap = 1.5 * LK_CAP
+    baseline = mark_bottom + gap + LK_CAP
+    height = baseline + LK_TOP
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 {f(height)}" width="1024" height="{f(height)}" role="img" aria-label="{ARIA}, with the wordmark CRESCENT X">
   <title>{TITLE}</title>
 {WEAVE_COMMENT}
-  <!-- The wordmark is live text (Montserrat / Jost / Futura / Century Gothic, 600, 0.25em tracking). Outline it before print or any use where the font is not guaranteed. -->
+  <!-- The wordmark is live text (Montserrat / Jost / Futura / Century Gothic, 600, 0.25em tracking), set {f(gap)} u
+       ({f(gap / LK_CAP)} cap heights) below the mark. Outline it before print or any use where the font is not guaranteed. -->
   <defs>
 {defs_block()}
   </defs>
   <g id="lockup" fill="{ink}">
-    <g id="mark" transform="translate(128 60) scale(1.5)">
+    <g id="mark" transform="translate({f(LK_X)} {f(ty)}) scale({f(LK_SCALE)})">
 {rings_block()}
     </g>
-    <text id="wordmark" x="{f(512 + fs * ls / 2)}" y="932" text-anchor="middle" font-family="Montserrat, Jost, Futura, 'Century Gothic', Helvetica, Arial, sans-serif" font-weight="600" font-size="{f(fs)}" letter-spacing="{f(fs * ls)}">CRESCENT X</text>
+    <text id="wordmark" x="{f(512 + LK_FS * LK_LS / 2)}" y="{f(baseline)}" text-anchor="middle" font-family="Montserrat, Jost, Futura, 'Century Gothic', Helvetica, Arial, sans-serif" font-weight="600" font-size="{f(LK_FS)}" letter-spacing="{f(LK_FS * LK_LS)}">CRESCENT X</text>
   </g>
 </svg>
 '''
 
 
-REF = "/tmp/claude-0/-home-user-Kubrique-/1089e9da-6911-5cb8-8308-49f4fb2445d5/scratchpad/orbital/target-crop.png"
+SCRATCH = "/tmp/claude-0/-home-user-Kubrique-/1089e9da-6911-5cb8-8308-49f4fb2445d5/scratchpad"
+REF = SCRATCH + "/orbital/target-crop.png"
+BEFORE = SCRATCH + "/cx-final/before/crescent-x-mono.svg"
+APPROVED = SCRATCH + "/cx-final/approved/approved.jpg"
 
-PREVIEW = '''<!doctype html>
-<html><head><meta charset="utf-8"><title>Crescent X - final review</title>
+
+def zoom(label, left, cx, cy, scale=1.5, w=230, h=160):
+    """a w x h window onto the mono SVG drawn at 512*scale px, centred on (cx, cy) u"""
+    return (f'<div class="box zoom" style="left:{left}px"><span class="lab">{label}</span>'
+            f'<img src="crescent-x-mono.svg" style="width:{512*scale:.0f}px;height:{512*scale:.0f}px;left:{w/2 - cx*scale:.0f}px;top:{h/2 - cy*scale:.0f}px"></div>')
+
+
+def preview_html():
+    tip1 = min(E1.poly(720), key=lambda p: p[0])
+    tip2 = min(E2.poly(720), key=lambda p: p[0])
+    end1 = max(E1.poly(720), key=lambda p: p[0])
+    end2 = max(E2.poly(720), key=lambda p: p[0])
+    zooms = "\n".join([
+        zoom("x1 tip / crescent (top-left)", 10, tip1[0] + 10, tip1[1]),
+        zoom("x2 tip / crescent (bottom-left)", 250, tip2[0] + 10, tip2[1]),
+        zoom("X centre weave", 490, XC[0] - 30, XC[1]),
+        zoom("x2 end / upper horn", 730, end2[0] - 20, end2[1] + 10),
+        zoom("x1 end / lower horn", 970, end1[0] - 20, end1[1] - 10)])
+    return f'''<!doctype html>
+<html><head><meta charset="utf-8"><title>Crescent X - round 3 review</title>
 <style>
-  html,body{margin:0;background:#fff;font:11px/1.3 Helvetica,Arial,sans-serif;color:#666}
-  body{width:1200px;height:673px;position:relative;overflow:hidden}
-  .lab{position:absolute;font-size:11px;color:#888;z-index:2;left:6px;top:4px}
-  .box{position:absolute;overflow:hidden;background:#fff}
-  img{display:block}
-  .ref{left:10px;top:10px;width:300px;height:300px}
-  .ref img{position:absolute;left:-59px;top:-40px;width:408px}
-  .mine{left:320px;top:10px;width:300px;height:300px}
-  .mine img{position:absolute;left:0;top:-5px;width:300px;height:300px}
-  .ovl{left:630px;top:10px;width:300px;height:300px}
-  .ovl img.r{position:absolute;left:-59px;top:-40px;width:408px;opacity:.4}
-  .ovl img.m{position:absolute;left:0;top:-5px;width:300px;height:300px;opacity:.7;filter:invert(1) sepia(1) saturate(30) hue-rotate(-30deg)}
-  .dark{left:940px;top:10px;width:250px;height:420px;background:#0d0e13}
-  .dark img.big{width:250px;height:250px;margin:0}
-  .strip{position:absolute;left:10px;top:320px;display:flex;gap:14px;align-items:flex-end;height:130px}
-  .strip div{display:flex;flex-direction:column;align-items:center;gap:3px}
-  .strip.d{left:950px;top:270px;background:#0d0e13;color:#889;padding:4px}
-  .zoom{top:460px;width:224px;height:200px}
-  .zoom img{position:absolute;width:800px;height:800px}
+  html,body{{margin:0;background:#fff;font:11px/1.3 Helvetica,Arial,sans-serif;color:#666}}
+  body{{width:1200px;height:673px;position:relative;overflow:hidden}}
+  .lab{{position:absolute;font-size:11px;color:#888;z-index:2;left:6px;top:4px;white-space:nowrap}}
+  .box{{position:absolute;overflow:hidden;background:#fff}}
+  img{{display:block}}
+  .ref{{left:10px;top:10px;width:290px;height:290px}}
+  .ref img{{position:absolute;left:-57px;top:-39px;width:394px}}
+  .before{{left:310px;top:10px;width:290px;height:290px}}
+  .before img{{width:290px;height:290px}}
+  .after{{left:610px;top:10px;width:290px;height:290px}}
+  .after img{{width:290px;height:290px}}
+  .appr{{left:910px;top:10px;width:280px;height:290px}}
+  .appr img{{position:absolute;left:-40px;top:-20px;width:360px}}
+  .dark{{left:10px;top:312px;width:180px;height:180px;background:#0d0e13}}
+  .dark img{{width:180px;height:180px}}
+  .strip{{position:absolute;display:flex;gap:12px;align-items:flex-end}}
+  .strip div{{display:flex;flex-direction:column;align-items:center;gap:3px}}
+  .strip.d{{left:200px;top:312px;height:172px;background:#0d0e13;color:#889;padding:4px 8px}}
+  .strip.l{{left:440px;top:312px;height:180px}}
+  .colour{{left:760px;top:312px;width:180px;height:180px}}
+  .colour img{{width:180px;height:180px}}
+  .lockup{{left:950px;top:312px;width:240px;height:180px}}
+  .lockup img{{height:180px;margin:0 auto}}
+  .zoom{{top:503px;width:230px;height:160px;border:1px solid #eee}}
+  .zoom img{{position:absolute}}
 </style></head><body>
-<div class="box ref"><span class="lab">reference</span><img src="file://REF"></div>
-<div class="box mine"><span class="lab">final / crescent-x-mono.svg</span><img src="crescent-x-mono.svg"></div>
-<div class="box ovl"><span class="lab">overlay (mine = red)</span><img class="r" src="file://REF"><img class="m" src="crescent-x-mono.svg"></div>
-<div class="box dark"><img class="big" src="crescent-x-mono-light.svg"></div>
-<div class="strip">
-  <div><img src="crescent-x-mono.svg" width="120" height="120"><span>120</span></div>
-  <div><img src="crescent-x-mono.svg" width="64" height="64"><span>64</span></div>
-  <div><img src="crescent-x-mono.svg" width="40" height="40"><span>40</span></div>
-  <div><img src="crescent-x-mono.svg" width="24" height="24"><span>24</span></div>
-  <div><img src="crescent-x-mono.svg" width="16" height="16"><span>16</span></div>
-</div>
+<div class="box ref"><span class="lab">reference (round 1)</span><img src="file://{REF}"></div>
+<div class="box before"><span class="lab">before: previous final</span><img src="file://{BEFORE}"></div>
+<div class="box after"><span class="lab">after: crescent-x-mono.svg</span><img src="crescent-x-mono.svg"></div>
+<div class="box appr"><span class="lab">client-approved layout (raster)</span><img src="file://{APPROVED}"></div>
+<div class="box dark"><img src="crescent-x-mono-light.svg"></div>
 <div class="strip d">
   <div><img src="crescent-x-mono-light.svg" width="64" height="64"><span>64</span></div>
   <div><img src="crescent-x-mono-light.svg" width="40" height="40"><span>40</span></div>
   <div><img src="crescent-x-mono-light.svg" width="24" height="24"><span>24</span></div>
   <div><img src="crescent-x-mono-light.svg" width="16" height="16"><span>16</span></div>
 </div>
-<div class="box zoom" style="left:10px"><span class="lab">centre x1.56</span><img src="crescent-x-mono.svg" style="left:-250px;top:-300px"></div>
-<div class="box zoom" style="left:244px"><span class="lab">x1 end / crescent</span><img src="crescent-x-mono.svg" style="left:-520px;top:-500px"></div>
-<div class="box zoom" style="left:478px"><span class="lab">x2 tip / crescent</span><img src="crescent-x-mono.svg" style="left:-520px;top:-120px"></div>
-<div class="box zoom" style="left:712px"><span class="lab">x1 loop + horn</span><img src="crescent-x-mono.svg" style="left:-10px;top:-120px"></div>
-<div class="box zoom" style="left:946px"><span class="lab">x2 lower-left end</span><img src="crescent-x-mono.svg" style="left:-10px;top:-480px"></div>
+<div class="strip l">
+  <div><img src="crescent-x-mono.svg" width="120" height="120"><span>120</span></div>
+  <div><img src="crescent-x-mono.svg" width="64" height="64"><span>64</span></div>
+  <div><img src="crescent-x-mono.svg" width="40" height="40"><span>40</span></div>
+  <div><img src="crescent-x-mono.svg" width="24" height="24"><span>24</span></div>
+  <div><img src="crescent-x-mono.svg" width="16" height="16"><span>16</span></div>
+</div>
+<div class="box colour"><span class="lab">crescent-x-colour.svg</span><img src="crescent-x-colour.svg"></div>
+<div class="box lockup"><span class="lab">lockup</span><img src="crescent-x-lockup.svg"></div>
+{zooms}
 </body></html>
 '''
+
 
 FRAMES = '''<!doctype html>
 <html><head><meta charset="utf-8"><title>Crescent X - animation frames</title>
@@ -495,50 +482,44 @@ FRAMES = '''<!doctype html>
 <div class="fr"><img src="frames/t18.svg"><span>t = 18 s</span></div>
 <div class="fr light" style="padding:8px"><img src="crescent-x.svg" style="width:220px;height:220px"><span>crescent-x.svg on white (live)</span></div>
 <div class="fr" style="padding:8px"><img src="crescent-x.svg" style="width:220px;height:220px"><span>crescent-x.svg on dark (live)</span></div>
-<div class="fr" style="padding:8px"><img src="crescent-x-lockup.svg" style="width:209px;height:220px;background:#fff"><span>lockup</span></div>
+<div class="fr" style="padding:8px"><img src="crescent-x-lockup.svg" style="width:auto;height:220px;background:#fff"><span>lockup</span></div>
 </body></html>
 '''
 
 
 def diagnostics():
     out = []
-    # crescent
     def thick(ang):
         t = math.radians(ang)
         r = R
-        while r > 0 and not CI.inside((OX + r * math.cos(t), OY + r * math.sin(t))):
+        while r > 0 and not CI.inside((CO.cx + r * math.cos(t), CO.cy + r * math.sin(t))):
             r -= 0.25
         return R - r
-    out.append(f"crescent horns at {HORNS[0]:.1f} / {HORNS[1]:.1f} deg (clock {((HORNS[0]+90)%360)/30:.2f} / {((HORNS[1]+90)%360)/30:.2f}); "
-               f"thickness at 0/-60/+60/-90/+90 deg: {thick(0):.1f} / {thick(-60):.1f} / {thick(60):.1f} / {thick(-90):.1f} / {thick(90):.1f} u")
-    # x2 tips and band widths
-    tipUR, tipLL = E2.pt(0.0), E2.pt(math.pi)
-    def band_depth(p):
-        t = math.atan2(p[1] - OY, p[0] - OX)
-        r = R
-        while r > 0 and not CI.inside((OX + r * math.cos(t), OY + r * math.sin(t))):
-            r -= 0.25
-        return math.hypot(p[0] - OX, p[1] - OY) - r, R - math.hypot(p[0] - OX, p[1] - OY)
-    di, do = band_depth(tipUR)
-    out.append(f"x2 upper-right tip at ({tipUR[0]:.1f},{tipUR[1]:.1f}): {di:.1f} u past the crescent's inner edge, {do:.1f} u inside the outer edge; "
-               f"lower-left extreme at ({tipLL[0]:.1f},{tipLL[1]:.1f}) (ref 40.9,385.5)")
-    # min x2 band width
-    worst = 99
-    for i in range(720):
-        q = L2.pt(2 * math.pi * i / 720)
-        x, y = E2.local(q)
-        k = 1 / math.sqrt((x / E2.a) ** 2 + (y / E2.b) ** 2)
-        worst = min(worst, (k - 1) * math.hypot(x, y))
-    out.append(f"x2 thinnest band {worst:.1f} u")
-    # x1 nose
-    nose = max(X1_POLY, key=lambda p: math.hypot(p[0] - OX, p[1] - OY) if 20 < math.degrees(math.atan2(p[1] - OY, p[0] - OX)) < 70 else 0)
-    di, do = band_depth(nose)
-    out.append(f"x1 nose at ({nose[0]:.1f},{nose[1]:.1f}) bearing {math.degrees(math.atan2(nose[1]-OY, nose[0]-OX)):.1f} deg: {di:.1f} u past the inner edge, {do:.1f} u inside the outer edge -> {do - GAP:.1f} u of crescent outside the halo")
-    # bbox
-    xs = [p[0] for pl in OUTLINES.values() for _, pts in pl for p in pts if True]
-    ys = [p[1] for pl in OUTLINES.values() for _, pts in pl for p in pts]
-    # crescent inner edge is inside the circle; the bbox of the union is the outer arc + rings
-    out.append(f"bbox x {min(xs):.1f}..{max(xs):.1f}  y {min(ys):.1f}..{max(ys):.1f}  centre ({(min(xs)+max(xs))/2:.1f},{(min(ys)+max(ys))/2:.1f})")
+    clock = lambda a: ((a + 90) % 360) / 30
+    out.append(f"crescent: centre ({CO.cx:.1f},{CO.cy:.1f}) R {R}, inner circle r {CUT_R:.2f} shifted {CUT_D:.2f} right; "
+               f"horns at {HORNS[0]:.1f} / {HORNS[1]:.1f} deg ({clock(HORNS[0]):.2f} / {clock(HORNS[1]):.2f} o'clock)")
+    out.append(f"crescent thickness at 9 / 12 / 6 / 10:30 / 7:30 o'clock: {thick(180):.1f} / {thick(270):.1f} / {thick(90):.1f} / "
+               f"{thick(225):.1f} / {thick(135):.1f} u ({100 * thick(180) / (2 * R):.1f} % of the diameter at 9 o'clock); "
+               f"band < 16 u beyond +/-{next(a for a in range(0, 180) if thick(180 - a) < 16):.0f} deg from 9 o'clock")
+    for name, E, L, spec in (("x1", E1, L1, X1), ("x2", E2, L2, X2)):
+        best, where, bad = ring_clearance(E)
+        tip = min(E.poly(720), key=lambda p: p[0])
+        end = max(E.poly(720), key=lambda p: p[0])
+        worst = 99
+        for i in range(720):
+            q = L.pt(2 * math.pi * i / 720)
+            x, y = E.local(q)
+            k = 1 / math.sqrt((x / E.a) ** 2 + (y / E.b) ** 2)
+            worst = min(worst, (k - 1) * math.hypot(x, y))
+        out.append(f"{name}: centre ({E.cx:.1f},{E.cy:.1f}) tilt {spec['th']} deg, bands {spec['B'] - spec['b'] + abs(spec['d']):.0f} / "
+                   f"{spec['B'] - spec['b'] - abs(spec['d']):.0f} u, thinnest {worst:.1f} u; left tip ({tip[0]:.1f},{tip[1]:.1f}) "
+                   f"clearance to the crescent {best:.1f} u at ({where[0]:.0f},{where[1]:.0f}); right tip ({end[0]:.1f},{end[1]:.1f}) "
+                   f"at r = {math.hypot(end[0] - CO.cx, end[1] - CO.cy) / R:.3f} R, {math.degrees(math.atan2(end[1] - CO.cy, end[0] - CO.cx)):.1f} deg; "
+                   f"points inside the crescent: {bad}")
+    xs = [p[0] for p in _pts]
+    ys = [p[1] for p in _pts]
+    out.append(f"bbox x {OX + min(xs):.1f}..{OX + max(xs):.1f}  y {OY + min(ys):.1f}..{OY + max(ys):.1f}  "
+               f"centre ({OX + (min(xs) + max(xs)) / 2:.1f},{OY + (min(ys) + max(ys)) / 2:.1f}); X centre ({XC[0]:.1f},{XC[1]:.1f})")
     return out
 
 
@@ -551,9 +532,15 @@ def main():
         print(d)
     if bad:
         sys.exit("UNEXPECTED crossing(s) - weave table does not cover them, nothing written:\n  " + "\n  ".join(bad))
-    files = {"crescent-x-mono.svg": svg_mono(INK), "crescent-x-mono-light.svg": svg_mono(LIGHT),
+    for name, E, L, spec in (("x1", E1, L1, X1), ("x2", E2, L2, X2)):
+        best, where, inside = ring_clearance(E)
+        if inside or best < TIP_GAP - 0.5:
+            sys.exit(f"{name} touches or lies across the crescent (clearance {best:.1f} u, {inside} points inside) - nothing written")
+    files = {"crescent-x-mono.svg": svg_static(INK),
+             "crescent-x-mono-light.svg": svg_static(LIGHT),
+             "crescent-x-colour.svg": svg_static(INK, fills={"crescent": INK, "x1": TEAL, "x2": TEAL}),
              "crescent-x.svg": svg_animated(), "crescent-x-lockup.svg": svg_lockup(),
-             "preview.html": PREVIEW.replace("REF", REF), "frames.html": FRAMES}
+             "preview.html": preview_html(), "frames.html": FRAMES}
     os.makedirs(os.path.join(HERE, "frames"), exist_ok=True)
     for t in (0, 6, 12, 18):
         files[f"frames/t{t}.svg"] = svg_animated(begin=f"-{t}s", delay=f"-{t}s")

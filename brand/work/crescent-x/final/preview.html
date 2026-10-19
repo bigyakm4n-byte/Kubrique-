@@ -1,46 +1,55 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>Crescent X - final review</title>
+<html><head><meta charset="utf-8"><title>Crescent X - round 3 review</title>
 <style>
   html,body{margin:0;background:#fff;font:11px/1.3 Helvetica,Arial,sans-serif;color:#666}
   body{width:1200px;height:673px;position:relative;overflow:hidden}
-  .lab{position:absolute;font-size:11px;color:#888;z-index:2;left:6px;top:4px}
+  .lab{position:absolute;font-size:11px;color:#888;z-index:2;left:6px;top:4px;white-space:nowrap}
   .box{position:absolute;overflow:hidden;background:#fff}
   img{display:block}
-  .ref{left:10px;top:10px;width:300px;height:300px}
-  .ref img{position:absolute;left:-59px;top:-40px;width:408px}
-  .mine{left:320px;top:10px;width:300px;height:300px}
-  .mine img{position:absolute;left:0;top:-5px;width:300px;height:300px}
-  .ovl{left:630px;top:10px;width:300px;height:300px}
-  .ovl img.r{position:absolute;left:-59px;top:-40px;width:408px;opacity:.4}
-  .ovl img.m{position:absolute;left:0;top:-5px;width:300px;height:300px;opacity:.7;filter:invert(1) sepia(1) saturate(30) hue-rotate(-30deg)}
-  .dark{left:940px;top:10px;width:250px;height:420px;background:#0d0e13}
-  .dark img.big{width:250px;height:250px;margin:0}
-  .strip{position:absolute;left:10px;top:320px;display:flex;gap:14px;align-items:flex-end;height:130px}
+  .ref{left:10px;top:10px;width:290px;height:290px}
+  .ref img{position:absolute;left:-57px;top:-39px;width:394px}
+  .before{left:310px;top:10px;width:290px;height:290px}
+  .before img{width:290px;height:290px}
+  .after{left:610px;top:10px;width:290px;height:290px}
+  .after img{width:290px;height:290px}
+  .appr{left:910px;top:10px;width:280px;height:290px}
+  .appr img{position:absolute;left:-40px;top:-20px;width:360px}
+  .dark{left:10px;top:312px;width:180px;height:180px;background:#0d0e13}
+  .dark img{width:180px;height:180px}
+  .strip{position:absolute;display:flex;gap:12px;align-items:flex-end}
   .strip div{display:flex;flex-direction:column;align-items:center;gap:3px}
-  .strip.d{left:950px;top:270px;background:#0d0e13;color:#889;padding:4px}
-  .zoom{top:460px;width:224px;height:200px}
-  .zoom img{position:absolute;width:800px;height:800px}
+  .strip.d{left:200px;top:312px;height:172px;background:#0d0e13;color:#889;padding:4px 8px}
+  .strip.l{left:440px;top:312px;height:180px}
+  .colour{left:760px;top:312px;width:180px;height:180px}
+  .colour img{width:180px;height:180px}
+  .lockup{left:950px;top:312px;width:240px;height:180px}
+  .lockup img{height:180px;margin:0 auto}
+  .zoom{top:503px;width:230px;height:160px;border:1px solid #eee}
+  .zoom img{position:absolute}
 </style></head><body>
-<div class="box ref"><span class="lab">reference</span><img src="file:///tmp/claude-0/-home-user-Kubrique-/1089e9da-6911-5cb8-8308-49f4fb2445d5/scratchpad/orbital/target-crop.png"></div>
-<div class="box mine"><span class="lab">final / crescent-x-mono.svg</span><img src="crescent-x-mono.svg"></div>
-<div class="box ovl"><span class="lab">overlay (mine = red)</span><img class="r" src="file:///tmp/claude-0/-home-user-Kubrique-/1089e9da-6911-5cb8-8308-49f4fb2445d5/scratchpad/orbital/target-crop.png"><img class="m" src="crescent-x-mono.svg"></div>
-<div class="box dark"><img class="big" src="crescent-x-mono-light.svg"></div>
-<div class="strip">
-  <div><img src="crescent-x-mono.svg" width="120" height="120"><span>120</span></div>
-  <div><img src="crescent-x-mono.svg" width="64" height="64"><span>64</span></div>
-  <div><img src="crescent-x-mono.svg" width="40" height="40"><span>40</span></div>
-  <div><img src="crescent-x-mono.svg" width="24" height="24"><span>24</span></div>
-  <div><img src="crescent-x-mono.svg" width="16" height="16"><span>16</span></div>
-</div>
+<div class="box ref"><span class="lab">reference (round 1)</span><img src="file:///tmp/claude-0/-home-user-Kubrique-/1089e9da-6911-5cb8-8308-49f4fb2445d5/scratchpad/orbital/target-crop.png"></div>
+<div class="box before"><span class="lab">before: previous final</span><img src="file:///tmp/claude-0/-home-user-Kubrique-/1089e9da-6911-5cb8-8308-49f4fb2445d5/scratchpad/cx-final/before/crescent-x-mono.svg"></div>
+<div class="box after"><span class="lab">after: crescent-x-mono.svg</span><img src="crescent-x-mono.svg"></div>
+<div class="box appr"><span class="lab">client-approved layout (raster)</span><img src="file:///tmp/claude-0/-home-user-Kubrique-/1089e9da-6911-5cb8-8308-49f4fb2445d5/scratchpad/cx-final/approved/approved.jpg"></div>
+<div class="box dark"><img src="crescent-x-mono-light.svg"></div>
 <div class="strip d">
   <div><img src="crescent-x-mono-light.svg" width="64" height="64"><span>64</span></div>
   <div><img src="crescent-x-mono-light.svg" width="40" height="40"><span>40</span></div>
   <div><img src="crescent-x-mono-light.svg" width="24" height="24"><span>24</span></div>
   <div><img src="crescent-x-mono-light.svg" width="16" height="16"><span>16</span></div>
 </div>
-<div class="box zoom" style="left:10px"><span class="lab">centre x1.56</span><img src="crescent-x-mono.svg" style="left:-250px;top:-300px"></div>
-<div class="box zoom" style="left:244px"><span class="lab">x1 end / crescent</span><img src="crescent-x-mono.svg" style="left:-520px;top:-500px"></div>
-<div class="box zoom" style="left:478px"><span class="lab">x2 tip / crescent</span><img src="crescent-x-mono.svg" style="left:-520px;top:-120px"></div>
-<div class="box zoom" style="left:712px"><span class="lab">x1 loop + horn</span><img src="crescent-x-mono.svg" style="left:-10px;top:-120px"></div>
-<div class="box zoom" style="left:946px"><span class="lab">x2 lower-left end</span><img src="crescent-x-mono.svg" style="left:-10px;top:-480px"></div>
+<div class="strip l">
+  <div><img src="crescent-x-mono.svg" width="120" height="120"><span>120</span></div>
+  <div><img src="crescent-x-mono.svg" width="64" height="64"><span>64</span></div>
+  <div><img src="crescent-x-mono.svg" width="40" height="40"><span>40</span></div>
+  <div><img src="crescent-x-mono.svg" width="24" height="24"><span>24</span></div>
+  <div><img src="crescent-x-mono.svg" width="16" height="16"><span>16</span></div>
+</div>
+<div class="box colour"><span class="lab">crescent-x-colour.svg</span><img src="crescent-x-colour.svg"></div>
+<div class="box lockup"><span class="lab">lockup</span><img src="crescent-x-lockup.svg"></div>
+<div class="box zoom" style="left:10px"><span class="lab">x1 tip / crescent (top-left)</span><img src="crescent-x-mono.svg" style="width:768px;height:768px;left:-103px;top:-144px"></div>
+<div class="box zoom" style="left:250px"><span class="lab">x2 tip / crescent (bottom-left)</span><img src="crescent-x-mono.svg" style="width:768px;height:768px;left:-96px;top:-453px"></div>
+<div class="box zoom" style="left:490px"><span class="lab">X centre weave</span><img src="crescent-x-mono.svg" style="width:768px;height:768px;left:-289px;top:-304px"></div>
+<div class="box zoom" style="left:730px"><span class="lab">x2 end / upper horn</span><img src="crescent-x-mono.svg" style="width:768px;height:768px;left:-550px;top:-170px"></div>
+<div class="box zoom" style="left:970px"><span class="lab">x1 end / lower horn</span><img src="crescent-x-mono.svg" style="width:768px;height:768px;left:-557px;top:-449px"></div>
 </body></html>

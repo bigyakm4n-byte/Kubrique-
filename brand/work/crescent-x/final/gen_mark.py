@@ -49,10 +49,13 @@ R = 222.0            # crescent outer radius
 HORN_DEG = 47.0      # horn tips at +/- HORN_DEG from the horizontal (about 1:25 and 4:35 o'clock)
 THICK = 47.0         # maximum crescent thickness, at 9 o'clock (10.6 % of the outer diameter)
 
-# rings: outer ellipse A x B, lens a x b, lens offset d along the ring's +n axis, tilt th (deg)
-# (+n = (-sin th, cos th): down-left for the descending ring, down-right for the ascending one)
-X1 = dict(A=200.0, B=49.0, a=179.0, b=24.0, d=-19.0, th=35.0)   # thick (+n) lower-left edge 44 u, thin 6 u
-X2 = dict(A=196.0, B=48.0, a=176.0, b=30.0, d=6.0, th=-33.0)    # thick (-n) upper-left edge 24 u, thin 12 u
+# rings: outer ellipse A x B; lens = two half-ellipses of half-length a sharing their tips on the
+# ring's long axis, semi-minor bt on the thick side and bn on the thin side; side = +1 / -1 says
+# which side of the axis (+n = (-sin th, cos th): down-left for the descending ring, down-right
+# for the ascending one) carries the thick band; th = tilt (deg).  Band thickness at the centre:
+# thick B - bt, thin B - bn; the thin edge stays >= its centre value all the way to the tips.
+X1 = dict(A=207.0, B=53.0, a=185.0, bt=17.0, bn=46.5, side=+1, th=35.5)   # descending: thick lower-left edge 36 u, thin 6.5 u
+X2 = dict(A=202.0, B=47.0, a=180.0, bt=24.0, bn=33.0, side=-1, th=-34.0)  # ascending: thick upper-left edge 23 u, thin 14 u
 
 TITLE = "Crescent X"
 ARIA = "Crescent X, the Kubrique logo mark: a lunar crescent facing right and two interlocking orbital rings forming an X"
@@ -138,12 +141,35 @@ def crescent_path(O, I):
     return d, [("outer", outer), ("inner", inner)], horns
 
 
+class Lens:
+    """two half-ellipses (same centre, tilt and half-length a) sharing their tips on the long axis:
+    semi-minor b_plus on the +n side (local t in [0, pi)), b_minus on the -n side"""
+    def __init__(self, cx, cy, a, b_plus, b_minus, th_deg):
+        self.P, self.M = Ell(cx, cy, a, b_plus, th_deg), Ell(cx, cy, a, b_minus, th_deg)
+        self.cx, self.cy, self.a, self.th = cx, cy, a, th_deg
+
+    def pt(self, t):
+        t = t % (2 * math.pi)
+        return (self.P if t < math.pi else self.M).pt(t)
+
+    def inside(self, p):
+        x, y = self.P.local(p)
+        b = self.P.b if y >= 0 else self.M.b
+        return (x / self.a) ** 2 + (y / b) ** 2 < 1.0
+
+    def whole(self):
+        p0 = self.P.pt(0.0)
+        return f"M{f(p0[0])} {f(p0[1])} {self.P.arc(0.0, math.pi)} {self.M.arc(math.pi, 0.0)} Z"
+
+    def poly(self, n=720):
+        return [self.pt(2 * math.pi * i / n) for i in range(n + 1)]
+
+
 def ring(spec, cx, cy):
     """outer ellipse and lens for a ring spec centred at (cx, cy)"""
-    th = math.radians(spec["th"])
-    nx, ny = -math.sin(th), math.cos(th)
     E = Ell(cx, cy, spec["A"], spec["B"], spec["th"])
-    L = Ell(cx + spec["d"] * nx, cy + spec["d"] * ny, spec["a"], spec["b"], spec["th"])
+    bp, bm = (spec["bt"], spec["bn"]) if spec["side"] > 0 else (spec["bn"], spec["bt"])
+    L = Lens(cx, cy, spec["a"], bp, bm, spec["th"])
     return E, L
 
 
@@ -361,7 +387,6 @@ LK_SCALE, LK_FS, LK_LS = 1.5, 92.0, 0.25
 LK_CAP = 0.70 * LK_FS                       # Montserrat / Jost cap height ~0.70 em
 LK_TOP = 111.0                              # top margin to the mark's top (= bottom margin below the baseline)
 LK_X = (1024 - 512 * LK_SCALE) / 2
-LK_Y = LK_TOP - _by0 * LK_SCALE - 256 * LK_SCALE + 256 * LK_SCALE  # placeholder, fixed below
 
 
 def svg_lockup(ink=INK):
@@ -369,9 +394,9 @@ def svg_lockup(ink=INK):
     bottom_of_mark = 256 + _by1
     ty = LK_TOP - top_of_mark * LK_SCALE
     mark_bottom = ty + bottom_of_mark * LK_SCALE
-    gap = 1.5 * LK_CAP
-    baseline = mark_bottom + gap + LK_CAP
-    height = baseline + LK_TOP
+    height = 10 * math.ceil((mark_bottom + 1.5 * LK_CAP + LK_CAP + LK_TOP) / 10)   # round canvas height
+    baseline = height - LK_TOP
+    gap = baseline - LK_CAP - mark_bottom               # >= 1.5 cap heights of clear space
     return f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 {f(height)}" width="1024" height="{f(height)}" role="img" aria-label="{ARIA}, with the wordmark CRESCENT X">
   <title>{TITLE}</title>
 {WEAVE_COMMENT}
@@ -505,17 +530,15 @@ def diagnostics():
         best, where, bad = ring_clearance(E)
         tip = min(E.poly(720), key=lambda p: p[0])
         end = max(E.poly(720), key=lambda p: p[0])
-        worst = 99
-        for i in range(720):
-            q = L.pt(2 * math.pi * i / 720)
-            x, y = E.local(q)
-            k = 1 / math.sqrt((x / E.a) ** 2 + (y / E.b) ** 2)
-            worst = min(worst, (k - 1) * math.hypot(x, y))
-        out.append(f"{name}: centre ({E.cx:.1f},{E.cy:.1f}) tilt {spec['th']} deg, bands {spec['B'] - spec['b'] + abs(spec['d']):.0f} / "
-                   f"{spec['B'] - spec['b'] - abs(spec['d']):.0f} u, thinnest {worst:.1f} u; left tip ({tip[0]:.1f},{tip[1]:.1f}) "
+        outer = E.poly(1440)
+        worst = min(min(math.hypot(q[0] - p[0], q[1] - p[1]) for p in outer[::4]) for q in L.poly(360))
+        cres = [p for _, pts in CRES_EDGES for p in pts[::2]]
+        right = min(min(math.hypot(q[0] - p[0], q[1] - p[1]) for p in cres) for q in outer[::4] if q[0] > E.cx)
+        out.append(f"{name}: centre ({E.cx:.1f},{E.cy:.1f}) tilt {spec['th']} deg, bands {spec['B'] - spec['bt']:.0f} / "
+                   f"{spec['B'] - spec['bn']:.0f} u at the centre, thinnest edge {worst:.1f} u; left tip ({tip[0]:.1f},{tip[1]:.1f}) "
                    f"clearance to the crescent {best:.1f} u at ({where[0]:.0f},{where[1]:.0f}); right tip ({end[0]:.1f},{end[1]:.1f}) "
-                   f"at r = {math.hypot(end[0] - CO.cx, end[1] - CO.cy) / R:.3f} R, {math.degrees(math.atan2(end[1] - CO.cy, end[0] - CO.cx)):.1f} deg; "
-                   f"points inside the crescent: {bad}")
+                   f"at r = {math.hypot(end[0] - CO.cx, end[1] - CO.cy) / R:.3f} R, {math.degrees(math.atan2(end[1] - CO.cy, end[0] - CO.cx)):.1f} deg, "
+                   f"right half clears the crescent by {right:.1f} u; points inside the crescent: {bad}")
     xs = [p[0] for p in _pts]
     ys = [p[1] for p in _pts]
     out.append(f"bbox x {OX + min(xs):.1f}..{OX + max(xs):.1f}  y {OY + min(ys):.1f}..{OY + max(ys):.1f}  "
